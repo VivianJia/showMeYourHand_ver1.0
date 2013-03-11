@@ -1,0 +1,18 @@
+﻿生成启动时间为 2013/3/7 13:48:02。
+     1>项目“D:\VivianJia\SourceCode\OpenGL教程_NeHe_源代码_1-48\OpenGL教程_NeHe_源代码_1-48\lesson31\Lesson31.vcxproj”在节点 2 上(Build 个目标)。
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _VC80_UPGRADE=0x0600 /D _MBCS /Gm /EHsc /RTC1 /MTd /GS /Gy- /fp:precise /Zc:wchar_t /Zc:forScope /Fo".\Debug\\" /Fd".\Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt MilkshapeModel.cpp
+         MilkshapeModel.cpp
+     1>d:\vivianjia\sourcecode\opengl教程_nehe_源代码_1-48\opengl教程_nehe_源代码_1-48\lesson31\milkshapemodel.cpp(210): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\string.h(110) : 参见“strcpy”的声明
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:".\Debug\Lesson31.exe" /INCREMENTAL /NOLOGO opengl32.lib glu32.lib glaux.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:".\Debug\Lesson31.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:".\Debug\Lesson31.lib" /MACHINE:X86 /SAFESEH .\Debug\Lesson31.obj
+         .\Debug\MilkshapeModel.obj
+         .\Debug\Model.obj
+     1>Lesson31.obj : warning LNK4075: 忽略“/EDITANDCONTINUE”(由于“/SAFESEH”规范)
+         Lesson31.vcxproj -> D:\VivianJia\SourceCode\OpenGL教程_NeHe_源代码_1-48\OpenGL教程_NeHe_源代码_1-48\lesson31\.\Debug\Lesson31.exe
+     1>已完成生成项目“D:\VivianJia\SourceCode\OpenGL教程_NeHe_源代码_1-48\OpenGL教程_NeHe_源代码_1-48\lesson31\Lesson31.vcxproj”(Build 个目标)的操作。
+
+生成成功。
+
+已用时间 00:00:03.86

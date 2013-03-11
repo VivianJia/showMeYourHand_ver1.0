@@ -1,7 +1,7 @@
 ﻿#ShowMeYourHand_ver1.0
 
->基本要求与ShowMeYourHand相同
->模型需求有部分改动
+*基本要求与ShowMeYourHand相同
+*模型需求有部分改动
 
 ##Model >(3.16 to 3.29)
 - 3ds & ms3d
