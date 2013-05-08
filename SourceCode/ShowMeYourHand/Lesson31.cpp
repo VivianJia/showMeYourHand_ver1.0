@@ -1,23 +1,19 @@
-/*
- *		This Code Was Created By Brett Porter For NeHe Productions 2000
- *		Visit NeHe Productions At http://nehe.gamedev.net
- *		
- *		Visit Brett Porter's Web Page at
- *		http://www.geocities.com/brettporter/programming
- */
-
 #include <windows.h>												// Header File For Windows
 #include <stdio.h>													// Header File For Standard Input/Output
 #include <gl\gl.h>													// Header File For The OpenGL32 Library
 #include <gl\glu.h>													// Header File For The GLu32 Library
 #include <gl\glaux.h>												// Header File For The Glaux Library
 
-#include "MilkshapeModel.h"											// Header File For Milkshape File
+#include<leap.h>													// Header File For The Leap Functions
 
+#include "MilkshapeModel.h"											// Header File For Milkshape File
 #pragma comment( lib, "opengl32.lib" )								// Search For OpenGL32.lib While Linking ( NEW )
 #pragma comment( lib, "glu32.lib" )									// Search For GLu32.lib While Linking    ( NEW )
 #pragma comment( lib, "glaux.lib" )									// Search For GLaux.lib While Linking    ( NEW )
+#pragma comment( lib, "leap.lib")
+#pragma comment( lib, "leapd.lib")
 
+using namespace Leap;
 HDC			hDC=NULL;												// Private GDI Device Context
 HGLRC		hRC=NULL;												// Permanent Rendering Context
 HWND		hWnd=NULL;												// Holds Our Window Handle
@@ -29,7 +25,14 @@ bool	keys[256];													// Array Used For The Keyboard Routine
 bool	active=TRUE;												// Window Active Flag Set To TRUE By Default
 bool	fullscreen=TRUE;											// Fullscreen Flag Set To Fullscreen Mode By Default
 
-GLfloat	yrot=0.0f;													// Y Rotation
+GLfloat	xrot = 0.0f,yrot = 0.0f,zrot = 0.0f;													// Y Rotation
+GLfloat	xpos = 0.0f, ypos = 0.0f,zpos = 0.0f;
+
+struct colorArray{
+	float r;
+	float g;
+	float b;
+}colorArray[20];
 
 LRESULT	CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);				// Declaration For WndProc
 
@@ -97,31 +100,48 @@ GLvoid ReSizeGLScene(GLsizei width, GLsizei height)					// Resize And Initialize
 	glLoadIdentity();												// Reset The Modelview Matrix
 }
 
-int InitGL(GLvoid)													// All Setup For OpenGL Goes Here
+int InitGL(GLvoid)															// All Setup For OpenGL Goes Here
 {
 	pModel->reloadTextures();										// Loads Model Textures
 
 	glEnable(GL_TEXTURE_2D);										// Enable Texture Mapping ( NEW )
-	glShadeModel(GL_SMOOTH);										// Enable Smooth Shading
+	glShadeModel(GL_SMOOTH);									// Enable Smooth Shading
 	glClearColor(0.0f, 0.0f, 0.0f, 0.5f);							// Black Background
-	glClearDepth(1.0f);												// Depth Buffer Setup
+	glClearDepth(1.0f);													// Depth Buffer Setup
 	glEnable(GL_DEPTH_TEST);										// Enables Depth Testing
-	glDepthFunc(GL_LEQUAL);											// The Type Of Depth Testing To Do
+	glDepthFunc(GL_LEQUAL);										// The Type Of Depth Testing To Do
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);				// Really Nice Perspective Calculations
-	return TRUE;													// Initialization Went OK
+
+	//init the color array
+	float red = 0, green = 0, blue = 0; 
+	for (int i = 0; i < 20; i++) {
+		colorArray[i].r = red;
+		colorArray[i].g = green;
+		colorArray[i].b = blue;
+		red += 2;
+		green += 2;
+		blue += 2;
+	} 
+	return TRUE;																// Initialization Went OK
 }
 
 int DrawGLScene(GLvoid)												// Here's Where We Do All The Drawing
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);				// Clear The Screen And The Depth Buffer
-	glLoadIdentity();												// Reset The Modelview Matrix
-	gluLookAt( 75, 75, 75, 0, 0, 0, 0, 1, 0 );						// (3) Eye Postion (3) Center Point (3) Y-Axis Up Vector
+	glLoadIdentity();	//单位化当前矩阵														// Reset The Modelview Matrix
+	//gluLookAt( 75, 75, 10, 0, 0, 0, 0, 1, 0 );						// (3) Eye Postion (3) Center Point (3) Y-Axis Up Vector
+	glTranslatef(0.0f,0.0f,-70.0f);
 
-	glRotatef(yrot,0.0f,1.0f,0.0f);									// Rotate On The Y-Axis By yrot
+	//模型移动
+	glTranslatef(xpos,0.0f,0.0f);
+	glTranslatef(0.0f,ypos,0.0f);
+	glTranslatef(0.0f,0.0f,zpos);
+	//模型旋转
+	glRotatef(xrot,1.0f,0.0f,0.0f);
+	glRotatef(yrot,0.0f,1.0f,0.0f);									 
+	glRotatef(zrot,0.0f,0.0f,1.0f);									 
+	pModel->draw();													
 
-	pModel->draw();													// Draw The Model
-
-	yrot+=1.0f;														// Increase yrot By One
 	return TRUE;													// Keep Going
 }
 
@@ -408,11 +428,14 @@ int WINAPI WinMain(	HINSTANCE	hInstance,							// Instance
 	BOOL	done=FALSE;												// Bool Variable To Exit Loop
 
 	pModel = new MilkshapeModel();									// Memory To Hold The Model
-	if ( pModel->loadModelData( "data/hand_NoBone.ms3d" ) == false )		// Loads The Model And Checks For Errors
+	if ( pModel->loadModelData( "data/Hand_bones_20.ms3d" ) == false )		// Loads The Model And Checks For Errors
 	{
 		MessageBox( NULL, "Couldn't load the model data\\hand_NoBone.ms3d", "Error", MB_OK | MB_ICONERROR );
 		return 0;													// If Model Didn't Load Quit
 	}
+
+	/*在这里调用setupJoint*/
+	pModel->SetupJointMatrices(pModel);
 
 	// Ask The User Which Screen Mode They Prefer
 	if (MessageBox(NULL,"Would You Like To Run In Fullscreen Mode?", "Start FullScreen?",MB_YESNO|MB_ICONQUESTION)==IDNO)
@@ -421,7 +444,7 @@ int WINAPI WinMain(	HINSTANCE	hInstance,							// Instance
 	}
 
 	// Create Our OpenGL Window
-	if (!CreateGLWindow("Brett Porter & NeHe's Model Rendering Tutorial",640,480,16,fullscreen))
+	if (!CreateGLWindow("ShowMeYourHand",640,480,16,fullscreen))
 	{
 		return 0;													// Quit If Window Was Not Created
 	}
@@ -458,11 +481,56 @@ int WINAPI WinMain(	HINSTANCE	hInstance,							// Instance
 				KillGLWindow();										// Kill Our Current Window
 				fullscreen=!fullscreen;								// Toggle Fullscreen / Windowed Mode
 				// Recreate Our OpenGL Window
-				if (!CreateGLWindow("Brett Porter & NeHe's Model Rendering Tutorial",640,480,16,fullscreen))
+				if (!CreateGLWindow("VivianJia's OpenGL Studio",640,480,16,fullscreen))
 				{
 					return 0;										// Quit If Window Was Not Created
 				}
 			}
+		}
+		//控制模型移动
+		if(keys[VK_UP]){
+			ypos +=  0.1f;
+		}
+
+		if(keys[VK_DOWN]){
+			ypos -=  0.1f;
+		}
+
+		if(keys[VK_LEFT]){
+			xpos -=  0.1f;
+		}
+
+		if(keys[VK_RIGHT]){
+			xpos +=  0.1f;
+		}
+
+		if(keys['W']) {
+			zpos += 1.0f;
+		}
+		if(keys['S']) {
+			zpos -= 1.0f;
+		}
+
+
+		//控制模型旋转
+		if(keys[VK_PRIOR]) {
+			yrot += 1.0f;
+		}
+		if(keys[VK_NEXT]){
+			yrot -= 1.0f;
+		}
+		if(keys[VK_HOME]){
+			xrot -= 1.0f;
+		}
+		if(keys[VK_END]){
+			xrot -= 1.0f;
+		}
+
+		if(keys[VK_INSERT]){
+			zrot += 1.0f;
+		}
+		if(keys[VK_DELETE]){
+			zrot -= 1.0f;
 		}
 	}
 

@@ -13,9 +13,14 @@
 
 #include <windows.h>		// Header File For Windows
 #include <gl\gl.h>			// Header File For The OpenGL32 Library
+#include <leap.h>
+#include "LeapMath.h"
+
 
 #include "Model.h"
 #include "Lesson31.h"
+
+using namespace Leap;
 
 Model::Model()
 {
@@ -102,13 +107,22 @@ void Model::draw()
 			{
 				int triangleIndex = m_pMeshes[i].m_pTriangleIndices[j];
 				const Triangle* pTri = &m_pTriangles[triangleIndex];
-
+				//对不同的关节控制部分进行着色，假定虚拟的骨骼控制不同部分的点
+				//即找出不同的部分并进行合并和着色，同时控制这些点
+				//if(j < 90){
+				//	glColor3f(1.0f, 0.0f, 0.0f);
+				//}
+				//else if(j >= 90 && j < 100){
+				//	glColor3f(1.0f, 0.89f, 0.76f);
+				//}
+				glColor3f(1.0f, 0.89f, 0.76f);
 				for ( int k = 0; k < 3; k++ )
 				{
 					int index = pTri->m_vertexIndices[k];
 
 					glNormal3fv( pTri->m_vertexNormals[k] );
 					glTexCoord2f( pTri->m_s[k], pTri->m_t[k] );
+				
 					glVertex3fv( m_pVertices[index].m_location );
 				}
 			}
@@ -120,6 +134,27 @@ void Model::draw()
 		glEnable( GL_TEXTURE_2D );
 	else
 		glDisable( GL_TEXTURE_2D );
+}
+
+//转换函数
+Vector floatToVector(const float *buffer) {
+	Vector v(buffer[0],buffer[1],buffer[2]);
+	return v;
+}
+
+//绑定骨骼：计算初始局部矩阵、初始全局矩阵
+void Model::SetupJointMatrices(Model *model){
+	/*为每个关节点设置四个矩阵，每个矩阵都是仿射变换矩阵：
+	初始局部矩阵、初始全局矩阵、当前局部矩阵、当前全局矩阵
+	*/
+	int i;
+	for(i = 0; i < model->m_numJoints; i ++) {
+		//构造初始局部矩阵
+		Matrix relativeMatrix;
+
+		//设定矩阵的旋转
+
+	}
 }
 
 void Model::reloadTextures()

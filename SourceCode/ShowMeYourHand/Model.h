@@ -13,6 +13,9 @@
 
 #ifndef MODEL_H
 #define MODEL_H
+#include<leap.h>
+typedef unsigned char byte;
+typedef unsigned short word;
 
 class Model
 {
@@ -45,8 +48,46 @@ class Model
 		//	Vertex structure
 		struct Vertex
 		{
-			char m_boneID;	// for skeletal animation
+			char m_boneID;										// for skeletal animation
 			float m_location[3];
+		};
+		//帧结构声明
+		struct KeyFrame;
+		//Joint information for this app
+		struct Joint 
+		{
+			byte m_flags;
+			char m_name[32];															//本Joint的名字	
+			char m_parentName[32];														//父级的名字
+			
+			float m_rotation[3];														//初始旋转向量
+			float m_translation[3];														//初始平移向量
+			
+			word m_numRotationKeyframes;												//旋转帧的数量
+			word m_numTranslationKeyframes;												//平移帧的数量
+			//KeyFrame *m_rotationKeyframes;											//所有的旋转帧
+			//KeyFrame *m_TranslationKeyframes;											//所有的平移帧
+
+			//20 joints from joint1~joint21(skip joint13)
+			
+			//used for rendering
+			int parentIndex;									//父节点索引
+			
+			//float matStaticLocal[4][4];							//初始骨骼局部矩阵
+			//float matStaticGlobal[4][4];						//初始骨骼全局矩阵
+			//float matCurrentLocal[4][4];						//当前局部矩阵
+			//float matCurrentGlobal[4][4];						//当前全局矩阵
+
+			Leap::Matrix matStaticLocal;
+			Leap::Matrix matStaticGlobal;
+			Leap::Matrix matCurrentLocal;
+			Leap::Matrix matCurrentGlobal;
+		};
+
+		struct KeyFrame 
+		{
+			float m_fTime;										//帧所处的时间，单位为秒
+			float m_fParam[3];									//平移值或者欧拉角
 		};
 
 	public:
@@ -63,6 +104,20 @@ class Model
 		virtual bool loadModelData( const char *filename ) = 0;
 
 		/*
+			初始化骨骼和绑定的顶点
+		*/
+		void SetupJointMatrices(Model *pModel);
+
+		/*
+			从索引读取节点
+		*/
+		void GetJointAt(int i, Joint & joint);
+
+		/*
+			将float数组转化为向量
+		*/
+		//Vector floatToVector(const float *buffer) ;
+		/*
 			Draw the model.
 		*/
 		void draw();
@@ -70,7 +125,7 @@ class Model
 		/*
 			Called if OpenGL context was lost and we need to reload textures, display lists, etc.
 		*/
-		void reloadTextures();
+		void  reloadTextures ();
 
 	protected:
 		//	Meshes used
@@ -85,9 +140,17 @@ class Model
 		int m_numTriangles;
 		Triangle *m_pTriangles;
 
-		//	Vertices Used
+		//	Vertices Used 
 		int m_numVertices;
 		Vertex *m_pVertices;
+
+		//Joint used
+		int m_numJoints;
+		Joint *m_pJoints;
+
+		//Keyframe used
+		int m_numKeyframes;
+		KeyFrame *m_pKeyframes;
 };
 
 #endif // ndef MODEL_H

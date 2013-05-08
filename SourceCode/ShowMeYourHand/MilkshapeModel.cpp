@@ -86,6 +86,24 @@ struct MS3DMaterial
     char m_alphamap[128];
 } PACK_STRUCT;
 
+// Keyframe data
+struct MS3DKeyframe
+{
+	float m_time;
+	float m_parameter[3];
+} PACK_STRUCT;
+
+//暂时不用
+//struct MS3D_Keyframe_rot{
+//	float time;
+//	float rotation[3];
+//};
+//
+//struct MS3D_Keyframe_pos{
+//	float time;
+//	float position[3];
+//};
+
 //	Joint information
 struct MS3DJoint
 {
@@ -94,16 +112,15 @@ struct MS3DJoint
 	char m_parentName[32];
 	float m_rotation[3];
 	float m_translation[3];
+
 	word m_numRotationKeyframes;
 	word m_numTranslationKeyframes;
+
+	//MS3DKeyframe *m_rotationKeyframes;												//	所有的旋转帧
+	//MS3DKeyframe *m_TranslationKeyframes;											//所有的平移帧
 } PACK_STRUCT;
 
-// Keyframe data
-struct MS3DKeyframe
-{
-	float m_time;
-	float m_parameter[3];
-} PACK_STRUCT;
+
 
 // Default alignment
 #ifdef _MSC_VER
@@ -136,6 +153,7 @@ bool MilkshapeModel::loadModelData( const char *filename )
 	if ( pHeader->m_version < 3 || pHeader->m_version > 4 )
 		return false; // "Unhandled file version. Only Milkshape3D Version 1.3 and 1.4 is supported." );
 
+	//Vertices
 	int nVertices = *( word* )pPtr; 
 	m_numVertices = nVertices;
 	m_pVertices = new Vertex[nVertices];
@@ -150,6 +168,7 @@ bool MilkshapeModel::loadModelData( const char *filename )
 		pPtr += sizeof( MS3DVertex );
 	}
 
+	//Triangles
 	int nTriangles = *( word* )pPtr;
 	m_numTriangles = nTriangles;
 	m_pTriangles = new Triangle[nTriangles];
@@ -167,6 +186,7 @@ bool MilkshapeModel::loadModelData( const char *filename )
 		pPtr += sizeof( MS3DTriangle );
 	}
 
+	//Meshes
 	int nGroups = *( word* )pPtr;
 	m_numMeshes = nGroups;
 	m_pMeshes = new Mesh[nGroups];
@@ -178,7 +198,7 @@ bool MilkshapeModel::loadModelData( const char *filename )
 
 		word nTriangles = *( word* )pPtr;
 		pPtr += sizeof( word );
-		int *pTriangleIndices = new int[nTriangles];
+		int *pTriangleIndices = new int[nTriangles];		//读取索引
 		for ( int j = 0; j < nTriangles; j++ )
 		{
 			pTriangleIndices[j] = *( word* )pPtr;
@@ -193,6 +213,7 @@ bool MilkshapeModel::loadModelData( const char *filename )
 		m_pMeshes[i].m_pTriangleIndices = pTriangleIndices;
 	}
 
+	//Material
 	int nMaterials = *( word* )pPtr;
 	m_numMaterials = nMaterials;
 	m_pMaterials = new Material[nMaterials];
@@ -209,11 +230,29 @@ bool MilkshapeModel::loadModelData( const char *filename )
 		strcpy( m_pMaterials[i].m_pTextureFilename, pMaterial->m_texture );
 		pPtr += sizeof( MS3DMaterial );
 	}
-
+	//keyFrames (jump to joints) read if necessary
+	pPtr += sizeof(float) * 2;				//fAnimationFPS and currentTime
+	pPtr += sizeof(int);					//totalFrame;
+	
+	//joints
+	int nJoints = *(word*)pPtr;				//2 bytes
+	m_numJoints = nJoints;
+	m_pJoints = new Joint[nJoints];
+	pPtr += sizeof(word);
+	for( i = 0;i < nJoints; i++) {
+		MS3DJoint *pJoints = (MS3DJoint*)pPtr;
+		m_pJoints[i].m_flags = pJoints->m_flags;
+		strcpy(m_pJoints[i].m_name, pJoints->m_name);
+		strcpy(m_pJoints[i].m_parentName, pJoints->m_parentName);
+		memcpy(m_pJoints[i].m_rotation, pJoints->m_rotation, sizeof(float)*3);
+		memcpy(m_pJoints[i].m_translation,pJoints->m_translation,sizeof(float)*3);
+		m_pJoints[i].m_numRotationKeyframes = pJoints->m_numRotationKeyframes;
+		m_pJoints[i].m_numTranslationKeyframes = pJoints->m_numTranslationKeyframes;
+		
+		pPtr += sizeof(MS3DJoint);
+	}
 	reloadTextures();
-
 	delete[] pBuffer;
 
 	return true;
 }
-
