@@ -16,7 +16,7 @@
 #include<leap.h>
 typedef unsigned char byte;
 typedef unsigned short word;
-
+using namespace Leap;
 class Model
 {
 	public:
@@ -49,7 +49,10 @@ class Model
 		struct Vertex
 		{
 			char m_boneID;										// for skeletal animation
-			float m_location[3];
+			float m_location[3];								//初始全局坐标
+			//float m_relativeLocaltion[3];
+			Vector v_relative;								    //相对joint的坐标
+			Vector v_absolute;									//保存更新后的全局坐标
 		};
 		//帧结构声明
 		struct KeyFrame;
@@ -73,15 +76,17 @@ class Model
 			//used for rendering
 			int parentIndex;									//父节点索引
 			
-			//float matStaticLocal[4][4];							//初始骨骼局部矩阵
+			//float matStaticLocal[4][4];						//初始骨骼局部矩阵
 			//float matStaticGlobal[4][4];						//初始骨骼全局矩阵
 			//float matCurrentLocal[4][4];						//当前局部矩阵
 			//float matCurrentGlobal[4][4];						//当前全局矩阵
 
-			Leap::Matrix matStaticLocal;
-			Leap::Matrix matStaticGlobal;
-			Leap::Matrix matCurrentLocal;
-			Leap::Matrix matCurrentGlobal;
+			Matrix matStaticLocal;
+			Matrix matStaticGlobal;
+			Matrix matCurrentLocal;
+			Matrix matCurrentGlobal;
+
+			Matrix InverseStaticGlobal;							//初始全局矩阵的逆矩阵
 		};
 
 		struct KeyFrame 
@@ -104,9 +109,15 @@ class Model
 		virtual bool loadModelData( const char *filename ) = 0;
 
 		/*
-			初始化骨骼和绑定的顶点
+			初始化骨骼
 		*/
-		void SetupJointMatrices(Model *pModel);
+		void SetupJointMatrices();
+
+		/*
+			初始化顶点相对其joint的坐标，相当于为每个顶点找到其绑定的joint
+		*/
+		void SetupVertices();
+
 
 		/*
 			从索引读取节点
@@ -116,16 +127,48 @@ class Model
 		/*
 			将float数组转化为向量
 		*/
-		//Vector floatToVector(const float *buffer) ;
+		Vector floatToVector(const float *buffer) ;
+
+		/*
+			按名称找节点索引
+		*/
+		int findJointByName(char *name);
+
 		/*
 			Draw the model.
 		*/
 		void draw();
 
 		/*
+			从Leap获取指尖的全局方位角和全局位置坐标,构造当前全局矩阵
+		*/
+		Vector getPitch(Vector v);
+
+		/*
+			从文件中获取所要的信息
+		*/
+		Vector getDataFromFile();
+
+		/*
+			动作帧
+		*/
+		void animation(int *pitches,int *rolls,int *yaws);
+		/*
+			更新顶点的绝对位置
+		*/
+		void updateVertices();
+
+		/*
+			根据顶点的绝对位置重绘顶点位置(索引是不变的)
+		*/
+		void reDraw();
+
+		/*
 			Called if OpenGL context was lost and we need to reload textures, display lists, etc.
 		*/
 		void  reloadTextures ();
+
+		int flag;
 
 	protected:
 		//	Meshes used
@@ -144,13 +187,14 @@ class Model
 		int m_numVertices;
 		Vertex *m_pVertices;
 
-		//Joint used
+		//  Joint used
 		int m_numJoints;
 		Joint *m_pJoints;
 
-		//Keyframe used
+		//  Keyframe used
 		int m_numKeyframes;
 		KeyFrame *m_pKeyframes;
+
 };
 
-#endif // ndef MODEL_H
+#endif 

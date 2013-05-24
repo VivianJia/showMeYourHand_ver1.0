@@ -4,16 +4,19 @@
 #include <gl\glu.h>													// Header File For The GLu32 Library
 #include <gl\glaux.h>												// Header File For The Glaux Library
 
-#include<leap.h>													// Header File For The Leap Functions
-
+#include <leap.h>													// Header File For The Leap Functions
+#include "glListener.h"
 #include "MilkshapeModel.h"											// Header File For Milkshape File
+#include "cvSlidebar.h"
+
 #pragma comment( lib, "opengl32.lib" )								// Search For OpenGL32.lib While Linking ( NEW )
 #pragma comment( lib, "glu32.lib" )									// Search For GLu32.lib While Linking    ( NEW )
 #pragma comment( lib, "glaux.lib" )									// Search For GLaux.lib While Linking    ( NEW )
 #pragma comment( lib, "leap.lib")
 #pragma comment( lib, "leapd.lib")
-
+using namespace std;
 using namespace Leap;
+
 HDC			hDC=NULL;												// Private GDI Device Context
 HGLRC		hRC=NULL;												// Permanent Rendering Context
 HWND		hWnd=NULL;												// Holds Our Window Handle
@@ -128,9 +131,9 @@ int InitGL(GLvoid)															// All Setup For OpenGL Goes Here
 int DrawGLScene(GLvoid)												// Here's Where We Do All The Drawing
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);				// Clear The Screen And The Depth Buffer
-	glLoadIdentity();	//单位化当前矩阵														// Reset The Modelview Matrix
-	//gluLookAt( 75, 75, 10, 0, 0, 0, 0, 1, 0 );						// (3) Eye Postion (3) Center Point (3) Y-Axis Up Vector
-	glTranslatef(0.0f,0.0f,-70.0f);
+	glLoadIdentity();												// Reset The Modelview Matrix
+	//gluLookAt( 75, 75, 10, 0, 0, 0, 0, 1, 0 );					// (3) Eye Postion (3) Center Point (3) Y-Axis Up Vector
+	glTranslatef(0.0f,10.0f,-70.0f);
 
 	//模型移动
 	glTranslatef(xpos,0.0f,0.0f);
@@ -140,8 +143,10 @@ int DrawGLScene(GLvoid)												// Here's Where We Do All The Drawing
 	glRotatef(xrot,1.0f,0.0f,0.0f);
 	glRotatef(yrot,0.0f,1.0f,0.0f);									 
 	glRotatef(zrot,0.0f,0.0f,1.0f);									 
-	pModel->draw();													
-
+													
+	/*if(pModel->flag == 1)
+	pModel->reDraw();*/
+	pModel->draw();	
 	return TRUE;													// Keep Going
 }
 
@@ -418,6 +423,31 @@ LRESULT CALLBACK WndProc(	HWND	hWnd,							// Handle For This Window
 	// Pass All Unhandled Messages To DefWindowProc
 	return DefWindowProc(hWnd,uMsg,wParam,lParam);
 }
+//callback function
+void onSlided(int, void*){
+	int pitch[15],roll[15],yaw[15];
+	//获取每个trackbar的位置
+	for(int i = 1; i <= 15; i++) {
+		/*
+			将 int型: i 转换为 char型:ch 
+		*/
+		//先定义一个字符串流对象
+		stringstream ss;
+		//输入流对象
+		ss << i;
+		//转换为string
+		string str = ss.str();
+		str = "joint" + str;
+		//转换为const char
+		const char *ch = str.c_str();
+
+		//获取trackbar的位置
+		pitch[i - 1] = cvGetTrackbarPos(ch, "PitchAngle");
+		roll[i - 1] = cvGetTrackbarPos(ch, "RollAngle");
+		yaw[i - 1] = cvGetTrackbarPos(ch, "YawAngle");
+	}
+	pModel->animation(pitch,roll,yaw);
+}
 
 int WINAPI WinMain(	HINSTANCE	hInstance,							// Instance
 					HINSTANCE	hPrevInstance,						// Previous Instance
@@ -428,14 +458,14 @@ int WINAPI WinMain(	HINSTANCE	hInstance,							// Instance
 	BOOL	done=FALSE;												// Bool Variable To Exit Loop
 
 	pModel = new MilkshapeModel();									// Memory To Hold The Model
-	if ( pModel->loadModelData( "data/Hand_bones_20.ms3d" ) == false )		// Loads The Model And Checks For Errors
+	if ( pModel->loadModelData( "data/Hand_bones_15.ms3d" ) == false )		// Loads The Model And Checks For Errors
 	{
 		MessageBox( NULL, "Couldn't load the model data\\hand_NoBone.ms3d", "Error", MB_OK | MB_ICONERROR );
 		return 0;													// If Model Didn't Load Quit
 	}
 
-	/*在这里调用setupJoint*/
-	pModel->SetupJointMatrices(pModel);
+	/*在这里调用setupJoint，初始化骨骼和顶点位置*/
+	pModel->SetupJointMatrices();
 
 	// Ask The User Which Screen Mode They Prefer
 	if (MessageBox(NULL,"Would You Like To Run In Fullscreen Mode?", "Start FullScreen?",MB_YESNO|MB_ICONQUESTION)==IDNO)
@@ -449,6 +479,85 @@ int WINAPI WinMain(	HINSTANCE	hInstance,							// Instance
 		return 0;													// Quit If Window Was Not Created
 	}
 
+	int angleSlider = 0; 
+	int sliderMax = 2 * PI * 100;
+	//在这里创建一个调节pitch角的opencv窗口
+	cvNamedWindow("PitchAngle", CV_WINDOW_AUTOSIZE);
+	cvResizeWindow("PitchAngle", 300,850);
+	cvMoveWindow("PitchAngle", 650,0);
+	
+	/*
+		创建20个Joint的局部pitch角调节,回调函数相同
+	*/
+	createTrackbar("joint1", "PitchAngle",&angleSlider,sliderMax, onSlided);
+	createTrackbar("joint2", "PitchAngle",&angleSlider,sliderMax, onSlided);
+	createTrackbar("joint3", "PitchAngle",&angleSlider,sliderMax, onSlided);
+	createTrackbar("joint4", "PitchAngle",&angleSlider,sliderMax, onSlided);
+	createTrackbar("joint5", "PitchAngle",&angleSlider,sliderMax, onSlided);
+	createTrackbar("joint6", "PitchAngle",&angleSlider,sliderMax, onSlided);
+	createTrackbar("joint7", "PitchAngle",&angleSlider,sliderMax, onSlided);
+	createTrackbar("joint8", "PitchAngle",&angleSlider,sliderMax, onSlided);
+	createTrackbar("joint9", "PitchAngle",&angleSlider,sliderMax, onSlided);
+	createTrackbar("joint10", "PitchAngle",&angleSlider,sliderMax, onSlided);
+	createTrackbar("joint11", "PitchAngle",&angleSlider,sliderMax, onSlided);
+	createTrackbar("joint12", "PitchAngle",&angleSlider,sliderMax, onSlided);
+	createTrackbar("joint13", "PitchAngle",&angleSlider,sliderMax, onSlided);
+	createTrackbar("joint14", "PitchAngle",&angleSlider,sliderMax, onSlided);
+	createTrackbar("joint15", "PitchAngle",&angleSlider,sliderMax, onSlided);
+
+	cvNamedWindow("RollAngle", CV_WINDOW_AUTOSIZE);
+	cvResizeWindow("RollAngle", 300,850);
+	cvMoveWindow("RollAngle", 850,0);
+	
+	/*
+		创建20个Joint的局部Row角调节,回调函数相同
+	*/
+	createTrackbar("joint1", "RollAngle",&angleSlider,sliderMax, onSlided);
+	createTrackbar("joint2", "RollAngle",&angleSlider,sliderMax, onSlided);
+	createTrackbar("joint3", "RollAngle",&angleSlider,sliderMax, onSlided);
+	createTrackbar("joint4", "RollAngle",&angleSlider,sliderMax, onSlided);
+	createTrackbar("joint5", "RollAngle",&angleSlider,sliderMax, onSlided);
+	createTrackbar("joint6", "RollAngle",&angleSlider,sliderMax, onSlided);
+	createTrackbar("joint7", "RollAngle",&angleSlider,sliderMax, onSlided);
+	createTrackbar("joint8", "RollAngle",&angleSlider,sliderMax, onSlided);
+	createTrackbar("joint9", "RollAngle",&angleSlider,sliderMax, onSlided);
+	createTrackbar("joint10", "RollAngle",&angleSlider,sliderMax, onSlided);
+	createTrackbar("joint11", "RollAngle",&angleSlider,sliderMax, onSlided);
+	createTrackbar("joint12", "RollAngle",&angleSlider,sliderMax, onSlided);
+	createTrackbar("joint13", "RollAngle",&angleSlider,sliderMax, onSlided);
+	createTrackbar("joint14", "RollAngle",&angleSlider,sliderMax, onSlided);
+	createTrackbar("joint15", "RollAngle",&angleSlider,sliderMax, onSlided);
+
+	cvNamedWindow("YawAngle", CV_WINDOW_AUTOSIZE);
+	cvResizeWindow("YawAngle", 300,850);
+	cvMoveWindow("YawAngle", 1050,0);
+	
+	/*
+		创建20个Joint的局部yaw角调节,回调函数相同
+	*/
+	createTrackbar("joint1", "YawAngle",&angleSlider,sliderMax, onSlided);
+	createTrackbar("joint2", "YawAngle",&angleSlider,sliderMax, onSlided);
+	createTrackbar("joint3", "YawAngle",&angleSlider,sliderMax, onSlided);
+	createTrackbar("joint4", "YawAngle",&angleSlider,sliderMax, onSlided);
+	createTrackbar("joint5", "YawAngle",&angleSlider,sliderMax, onSlided);
+	createTrackbar("joint6", "YawAngle",&angleSlider,sliderMax, onSlided);
+	createTrackbar("joint7", "YawAngle",&angleSlider,sliderMax, onSlided);
+	createTrackbar("joint8", "YawAngle",&angleSlider,sliderMax, onSlided);
+	createTrackbar("joint9", "YawAngle",&angleSlider,sliderMax, onSlided);
+	createTrackbar("joint10", "YawAngle",&angleSlider,sliderMax, onSlided);
+	createTrackbar("joint11", "YawAngle",&angleSlider,sliderMax, onSlided);
+	createTrackbar("joint12", "YawAngle",&angleSlider,sliderMax, onSlided);
+	createTrackbar("joint13", "YawAngle",&angleSlider,sliderMax, onSlided);
+	createTrackbar("joint14", "YawAngle",&angleSlider,sliderMax, onSlided);
+	createTrackbar("joint15", "YawAngle",&angleSlider,sliderMax, onSlided);
+
+	/*Leap:
+	glListener listener;
+	Controller controller;
+	controller.addListener(listener);
+	listener.onFrame(controller);
+	*/
+	
 	while(!done)													// Loop That Runs While done=FALSE
 	{
 		if (PeekMessage(&msg,NULL,0,0,PM_REMOVE))					// Is There A Message Waiting?
@@ -487,50 +596,54 @@ int WINAPI WinMain(	HINSTANCE	hInstance,							// Instance
 				}
 			}
 		}
+
 		//控制模型移动
 		if(keys[VK_UP]){
-			ypos +=  0.1f;
+			ypos +=  0.2f;
 		}
 
 		if(keys[VK_DOWN]){
-			ypos -=  0.1f;
+			ypos -=  0.2f;
 		}
 
 		if(keys[VK_LEFT]){
-			xpos -=  0.1f;
+			xpos -=  0.2f;
 		}
 
 		if(keys[VK_RIGHT]){
-			xpos +=  0.1f;
+			xpos +=  0.2f;
 		}
 
 		if(keys['W']) {
-			zpos += 1.0f;
+			zpos += 0.2f;
 		}
 		if(keys['S']) {
-			zpos -= 1.0f;
+			zpos -= 0.2f;
 		}
-
 
 		//控制模型旋转
 		if(keys[VK_PRIOR]) {
-			yrot += 1.0f;
+			yrot += 0.2f;
 		}
 		if(keys[VK_NEXT]){
-			yrot -= 1.0f;
+			yrot -= 0.2f;
 		}
 		if(keys[VK_HOME]){
-			xrot -= 1.0f;
+			xrot += 0.2f;
 		}
 		if(keys[VK_END]){
-			xrot -= 1.0f;
+			xrot -= 0.2f;
 		}
 
 		if(keys[VK_INSERT]){
-			zrot += 1.0f;
+			zrot += 0.2f;
 		}
 		if(keys[VK_DELETE]){
-			zrot -= 1.0f;
+			zrot -= 0.2f;
+		}
+
+		if(keys['p']){
+			
 		}
 	}
 

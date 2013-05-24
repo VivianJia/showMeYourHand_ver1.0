@@ -27,6 +27,12 @@
     <ClCompile Include="mathlib.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="glListener.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cvSlidebar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Lesson31.h">
@@ -39,6 +45,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="mathlib.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="glListener.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cvSlidebar.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
