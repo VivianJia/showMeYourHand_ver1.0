@@ -449,6 +449,36 @@ void onSlided(int, void*){
 	pModel->animation(pitch,roll,yaw);
 }
 
+//callback function
+void glListener::onFrame(const Controller& controller){
+	float pitches[15],rolls[15],yaws[15];
+	//memset(pitches, 0,sizeof(pitches));
+	//memset(rolls, 0,sizeof(rolls));
+	//memset(yaws, 0,sizeof(yaws));
+	//Get the most recent frame and report some basic information
+	const Frame frame = controller.frame();
+	if(!frame.hands().empty()) {
+		//get the first hand
+		const Hand hand = frame.hands()[0];
+
+		//check if the hand has any fingers
+		const FingerList fingers = hand.fingers();
+		if (!fingers.empty()) {
+			//Thumb
+			yaws[2] = fingers[3].direction().pitch();
+			//Index
+			yaws[5] = fingers[1].direction().pitch();
+			//Middle
+			yaws[8]= fingers[0].direction().pitch();
+			//Ring
+			yaws[11]= fingers[2].direction().pitch();
+			//Little
+			yaws[14]= fingers[4].direction().pitch();
+		}
+	}
+	pModel->animation(pitches,rolls,yaws);
+}
+
 int WINAPI WinMain(	HINSTANCE	hInstance,							// Instance
 					HINSTANCE	hPrevInstance,						// Previous Instance
 					LPSTR		lpCmdLine,							// Command Line Parameters
@@ -458,9 +488,9 @@ int WINAPI WinMain(	HINSTANCE	hInstance,							// Instance
 	BOOL	done=FALSE;												// Bool Variable To Exit Loop
 
 	pModel = new MilkshapeModel();									// Memory To Hold The Model
-	if ( pModel->loadModelData( "data/Hand_bones_15.ms3d" ) == false )		// Loads The Model And Checks For Errors
+	if ( pModel->loadModelData( "data/Hand_1.0.ms3d" ) == false )		// Loads The Model And Checks For Errors
 	{
-		MessageBox( NULL, "Couldn't load the model data\\hand_NoBone.ms3d", "Error", MB_OK | MB_ICONERROR );
+		MessageBox( NULL, "Couldn't load the model data\\Hand_bones_2.0.ms3d", "Error", MB_OK | MB_ICONERROR );
 		return 0;													// If Model Didn't Load Quit
 	}
 
@@ -478,7 +508,7 @@ int WINAPI WinMain(	HINSTANCE	hInstance,							// Instance
 	{
 		return 0;													// Quit If Window Was Not Created
 	}
-
+#pragma region opencv
 	int angleSlider = 0; 
 	int sliderMax = 2 * PI * 100;
 	//在这里创建一个调节pitch角的opencv窗口
@@ -550,13 +580,8 @@ int WINAPI WinMain(	HINSTANCE	hInstance,							// Instance
 	createTrackbar("joint13", "YawAngle",&angleSlider,sliderMax, onSlided);
 	createTrackbar("joint14", "YawAngle",&angleSlider,sliderMax, onSlided);
 	createTrackbar("joint15", "YawAngle",&angleSlider,sliderMax, onSlided);
+#pragma endregion opencv 
 
-	/*Leap:
-	glListener listener;
-	Controller controller;
-	controller.addListener(listener);
-	listener.onFrame(controller);
-	*/
 	
 	while(!done)													// Loop That Runs While done=FALSE
 	{
@@ -645,6 +670,13 @@ int WINAPI WinMain(	HINSTANCE	hInstance,							// Instance
 		if(keys['p']){
 			
 		}
+
+//#pragma region LeapMotion
+//		glListener listener;
+//		Controller controller;
+//		controller.addListener(listener);
+//		listener.onFrame(controller);
+//#pragma endregion LeapMotion
 	}
 
 	// Shutdown

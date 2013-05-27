@@ -25,7 +25,7 @@ void angleMatrix(Vector v, Matrix *m){
 	cr = cos(tempAngle);
 
 	/*
-		构造旋转矩阵
+		构造旋转矩阵，tips：要按照列序构造才符合D-H坐标要求
 	*/
 	/*Vector xBasis(cp*cy,sr*sp*cy+cr*-sy,(cr*sp*cy+-sr*-sy));
 	Vector yBasis(cp*sy,sr*sp*sy+cr*cy,(cr*sp*sy+-sr*cy));
@@ -40,6 +40,8 @@ void angleMatrix(Vector v, Matrix *m){
 	m->zBasis = zBasis;
 	/*m->origin = origin;*/
 }
+
+#pragma region Extend function
 
 /*
 	Inverse a matrix
@@ -126,7 +128,5 @@ void VectorITransform(Vector *vIn, Matrix *mat, Vector *vOut) {
 }
 
 void tranverse(Matrix *relativeMatrix){
-	//Matrix rotInverse = Matrix(Vector(relativeMatrix->xBasis[0], yBasis[0], zBasis[0]),
-	//	Vector(xBasis[1], yBasis[1], zBasis[1]),
-	//	Vector(xBasis[2], yBasis[2], zBasis[2]));
 }
+#pragma endregion Extend function

@@ -73,6 +73,13 @@ Model::~Model()
 		delete[] m_pVertices;
 		m_pVertices = NULL;
 	}
+
+	m_numJoints= 0;
+	if ( m_pJoints != NULL )
+	{
+		delete[] m_pJoints;
+		m_pJoints = NULL;
+	}
 }
 
 void Model::draw() 
@@ -136,8 +143,6 @@ void Model::draw()
 						case 12:glColor3f(0.0f, 218.0/255.0f, 185.0/255.0f);break;
 						case 13:glColor3f(238.0/255.0f, 213.0/255.0f, 210.0/255.0f);break;
 						case 14:glColor3f(205.0/255.0f, 133.0/255.0f, 63.0/255.0f);break;
-						/*case 15:glColor3f(1.0f,0.5f,0.7f);break;*/
-
 						default:glColor3f(1.0f,1.0f,1.0f);break;
 						}
 					}
@@ -230,8 +235,6 @@ void Model::SetupVertices(){
 			v = Vector (mVt->m_location[0],mVt->m_location[1],mVt->m_location[2]);
 
 			//求该矩阵的逆矩阵
-			/*InverseMatrix(&matrix,  &matrix2);*/
-			//m_pJoints[mVt->m_boneID].InverseStaticGlobal = matrix2;
 			matrix2 = matrix.rigidInverse();
 
 			////求该顶点的相对坐标，点变换
@@ -264,41 +267,151 @@ Vector Model::getPitch(Vector v){
 	
 }
 
-//animate
-void Model::animation (int *pitches,int *rolls,int *yaws){
+//reload animate
+void Model::animation (int *pitches, int *rolls, int *yaws){
 	/*
 		1 实际阶段:当获取到一个Leap的更新帧, 利用帧数据进行刷新
 		2 模拟阶段:利用已有的数据进行骨骼的重置
-		  已有数据包含:joint3,7,11,15,19的rpy方位角,三自由度
-		  问题:必须推算出每个节点的方位角,构造出每一节点的当前全局矩阵,才能利用下面的算法.
-		  逆向运动学:根据DIP当前全局矩阵,逐级计算父节点的当前全局矩阵。那么当前局部矩阵还有用吗？
-		  getDataFromFile();
 	*/
 
 	/* 
 		3 用opencv的trackbar绘制滑动条控制角度  
 	*/
-	int i;
-	for(i = 0; i < m_numJoints; i ++) {
-		Joint *joint = & m_pJoints[i];
-		/*
-			求当前动作矩阵，该矩阵基于初始局部变换
-		*/
+#pragma region no restrict
+	//for(int i = 0; i < m_numJoints; i ++) {
+	//	Joint *joint = & m_pJoints[i];
+	//	/*
+	//		求当前动作矩阵，该矩阵基于初始局部变换
+	//	*/
+	//	Matrix motionMatrix;
+	//	Vector vTemp;
+	//	//修改关节角
+	//	vTemp.x = pitches[i] / 100.0;
+	//	vTemp.z = rolls[i] / 100.0;
+	//	vTemp.y = yaws[i] / 100.0;
+	//	//设定矩阵的旋转
+	//	angleMatrix(vTemp,&motionMatrix);
+
+	//	//当前局部矩阵 = 初始局部矩阵*动作矩阵，程序设定的变换是基于初始局部
+	//	joint->matCurrentLocal =joint->matStaticLocal * motionMatrix; 
+
+	//	/*
+	//		求当前全局矩阵
+	//	*/
+	//	//如果是根节点,则局部矩阵则为全局矩阵
+	//	if(strcmp(joint->m_parentName,"") == 0){
+	//		joint->matCurrentGlobal = joint->matCurrentLocal;
+	//	}
+	//	else{//如果不是根节点
+	//		//找到父节点
+	//		Joint *parentJoint = & m_pJoints[joint->parentIndex];
+	//		joint->matCurrentGlobal = parentJoint->matCurrentGlobal * joint->matCurrentLocal;
+	//	}
+	//}
+#pragma endregion no restrict
+
+#pragma region extent
+	/*
+		wrist
+	*/
+	Joint *joint1 = &m_pJoints[0];
+	joint1->vCurrent.x = pitches[0] / 100.0;
+	joint1->vCurrent.y = rolls[0] / 100.0;
+	joint1->vCurrent.z = yaws[0] / 100.0;
+
+	/*
+		Thumb finger
+	*/
+	Joint *joint3 = & m_pJoints[2];				//Thumb DIP
+	joint3->vCurrent.x = pitches[2] / 100.0;
+	//joint6->vCurrent.z = rolls[2] / 100.0;
+	joint3->vCurrent.y = yaws[2] / 100.0;
+
+	Joint *joint2 = & m_pJoints[1];				//Index MP
+	joint2->vCurrent.x = pitches[2] / 100.0;
+	//joint4->vCurrent.z = rolls[2] / 100.0;
+	joint2->vCurrent.y = yaws[2] / 100.0 * (1.0/2.0);
+	
+	/*
+		Index finger
+	*/
+	Joint *joint6 = & m_pJoints[5];				//Index DIP
+	joint6->vCurrent.x = pitches[5] / 100.0;
+	//joint6->vCurrent.z = rolls[5] / 100.0;
+	joint6->vCurrent.y = -yaws[5] / 100.0;
+
+	Joint *joint5 = & m_pJoints[4];				//Index PIP
+	joint5->vCurrent.x = pitches[5] / 100.0 ;
+	//joint5->vCurrent.z = rolls[5] / 100.0;
+	joint5->vCurrent.y = -yaws[5] / 100.0* (3.0/2.0);
+
+	Joint *joint4 = & m_pJoints[3];				//Index MP
+	joint4->vCurrent.x = -pitches[5] / 100.0;
+	//joint4->vCurrent.z = rolls[5] / 100.0;
+	joint4->vCurrent.y = yaws[5] / 100.0 * (1.0/2.0);
+
+	/*
+		Middle finger
+	*/
+	Joint *joint9 = & m_pJoints[8];				//Middle DIP
+	joint9->vCurrent.x = pitches[8] / 100.0;
+	//joint9->vCurrent.z = rolls[8] / 100.0;
+	joint9->vCurrent.y = yaws[8] / 100.0;
+
+	Joint *joint8 = & m_pJoints[7];				//Middle PIP
+	joint8->vCurrent.x = pitches[8] / 100.0 ;
+	//joint8->vCurrent.z = rolls[8] / 100.0;
+	joint8->vCurrent.y = yaws[8] / 100.0 * (3.0/2.0);
+
+	Joint *joint7 = & m_pJoints[6];				//Middle MP
+	joint7->vCurrent.x = pitches[8] / 100.0;
+	//joint7->vCurrent.z = rolls[8] / 100.0;
+	joint7->vCurrent.y = yaws[8] / 100.0 * (1.0/2.0);
+
+	/*
+		Ring finger
+	*/
+	Joint *joint12 = & m_pJoints[11];				//Ring DIP
+	joint12->vCurrent.x = pitches[11] / 100.0;
+	//joint12->vCurrent.z = rolls[11] / 100.0;
+	joint12->vCurrent.y = -yaws[11] / 100.0;
+
+	Joint *joint11 = & m_pJoints[10];				//Ring PIP
+	joint11->vCurrent.x = pitches[11] / 100.0 ;
+	//joint11->vCurrent.z = rolls[11] / 100.0;
+	joint11->vCurrent.y = -yaws[11] / 100.0 * (3.0/2.0);
+
+	Joint *joint10 = & m_pJoints[9];				//Ring MP
+	joint10->vCurrent.x = pitches[11] / 100.0;
+	//joint10->vCurrent.z = rolls[11] / 100.0;
+	joint10->vCurrent.y = yaws[11] / 100.0 * (1.0/2.0);
+
+	/*
+		Little finger
+	*/
+	Joint *joint15 = & m_pJoints[14];				//Little DIP
+	joint15->vCurrent.x = pitches[14] / 100.0;
+	//joint15->vCurrent.z = rolls[14] / 100.0;
+	joint15->vCurrent.y = -yaws[14] / 100.0;
+
+	Joint *joint14 = & m_pJoints[13];				//Little PIP
+	joint14->vCurrent.x = pitches[14] / 100.0 ;
+	//joint14->vCurrent.z = rolls[14] / 100.0;
+	joint14->vCurrent.y = -yaws[14] / 100.0 * (3.0/2.0);
+	
+	Joint *joint13 = & m_pJoints[12];				//Little MP
+	joint13->vCurrent.x = pitches[14] / 100.0;
+	//joint13->vCurrent.z = rolls[14] / 100.0;
+	joint13->vCurrent.y = yaws[14] / 100.0 * (1.0/2.0);
+
+	for(int i = 0; i < m_numJoints; i++) {
 		Matrix motionMatrix;
-		Vector vTemp;
-		//修改关节角
-		vTemp.y = pitches[i] / 100.0;
-		vTemp.x = rolls[i] / 100.0;
-		vTemp.z = yaws[i] / 100.0;
-		
-		//设定矩阵的旋转
-		angleMatrix(vTemp,&motionMatrix);
+		Joint *joint = & m_pJoints[i];
+		//构造旋转矩阵
+		angleMatrix(joint->vCurrent, &motionMatrix);
 
-		//设定矩阵的平移
-		//motionMatrix.origin = Vector (joint->m_translation[0],joint->m_translation[1],joint->m_translation[2]);
-
-		//当前局部矩阵 = 初始局部矩阵*动作矩阵，程序设定的变换是基于初始局部
-		joint->matCurrentLocal =joint->matStaticLocal * motionMatrix;
+		//当前局部矩阵 = 初始局部矩阵*动作矩阵，动画矩阵是相对于初始矩阵状态的变换
+		joint->matCurrentLocal = joint->matStaticLocal * motionMatrix; 
 
 		/*
 			求当前全局矩阵
@@ -314,13 +427,184 @@ void Model::animation (int *pitches,int *rolls,int *yaws){
 		}
 	}
 
+
+
+#pragma endregion extent
 	/*	
 		更新顶点位置
 		重绘
 	*/
 	updateVertices();
-//	reDraw();
+}
 
+//animate
+void Model::animation (float *pitches, float *rolls, float *yaws){
+	/*
+		1 实际阶段:当获取到一个Leap的更新帧, 利用帧数据进行刷新
+		2 模拟阶段:利用已有的数据进行骨骼的重置
+	*/
+
+	/* 
+		3 用opencv的trackbar绘制滑动条控制角度  
+	*/
+#pragma region no restrict
+	//for(int i = 0; i < m_numJoints; i ++) {
+	//	Joint *joint = & m_pJoints[i];
+	//	/*
+	//		求当前动作矩阵，该矩阵基于初始局部变换
+	//	*/
+	//	Matrix motionMatrix;
+	//	Vector vTemp;
+	//	//修改关节角
+	//	vTemp.x = pitches[i] / 100.0;
+	//	vTemp.z = rolls[i] / 100.0;
+	//	vTemp.y = yaws[i] / 100.0;
+	//	//设定矩阵的旋转
+	//	angleMatrix(vTemp,&motionMatrix);
+
+	//	//当前局部矩阵 = 初始局部矩阵*动作矩阵，程序设定的变换是基于初始局部
+	//	joint->matCurrentLocal =joint->matStaticLocal * motionMatrix; 
+
+	//	/*
+	//		求当前全局矩阵
+	//	*/
+	//	//如果是根节点,则局部矩阵则为全局矩阵
+	//	if(strcmp(joint->m_parentName,"") == 0){
+	//		joint->matCurrentGlobal = joint->matCurrentLocal;
+	//	}
+	//	else{//如果不是根节点
+	//		//找到父节点
+	//		Joint *parentJoint = & m_pJoints[joint->parentIndex];
+	//		joint->matCurrentGlobal = parentJoint->matCurrentGlobal * joint->matCurrentLocal;
+	//	}
+	//}
+#pragma endregion no restrict
+
+#pragma region extent
+	/*
+		wrist
+	*/
+	Joint *joint1 = &m_pJoints[0];
+	joint1->vCurrent.x = pitches[0] / 100.0;
+	joint1->vCurrent.y = rolls[0] / 100.0;
+	joint1->vCurrent.z = yaws[0] / 100.0;
+
+	/*
+		Thumb finger
+	*/
+	Joint *joint3 = & m_pJoints[2];				//Thumb DIP
+	joint3->vCurrent.x = pitches[2] / 100.0;
+	//joint6->vCurrent.z = rolls[2] / 100.0;
+	joint3->vCurrent.y = yaws[2] / 100.0;
+
+	Joint *joint2 = & m_pJoints[1];				//Index MP
+	joint2->vCurrent.x = pitches[2] / 100.0;
+	//joint4->vCurrent.z = rolls[2] / 100.0;
+	joint2->vCurrent.y = yaws[2] / 100.0 * (1.0/2.0);
+	
+	/*
+		Index finger
+	*/
+	Joint *joint6 = & m_pJoints[5];				//Index DIP
+	joint6->vCurrent.x = pitches[5] / 100.0;
+	//joint6->vCurrent.z = rolls[5] / 100.0;
+	joint6->vCurrent.y = -yaws[5] / 100.0;
+
+	Joint *joint5 = & m_pJoints[4];				//Index PIP
+	joint5->vCurrent.x = pitches[5] / 100.0 ;
+	//joint5->vCurrent.z = rolls[5] / 100.0;
+	joint5->vCurrent.y = -yaws[5] / 100.0* (3.0/2.0);
+
+	Joint *joint4 = & m_pJoints[3];				//Index MP
+	joint4->vCurrent.x = -pitches[5] / 100.0;
+	//joint4->vCurrent.z = rolls[5] / 100.0;
+	joint4->vCurrent.y = yaws[5] / 100.0 * (1.0/2.0);
+
+	/*
+		Middle finger
+	*/
+	Joint *joint9 = & m_pJoints[8];				//Middle DIP
+	joint9->vCurrent.x = pitches[8] / 100.0;
+	//joint9->vCurrent.z = rolls[8] / 100.0;
+	joint9->vCurrent.y = yaws[8] / 100.0;
+
+	Joint *joint8 = & m_pJoints[7];				//Middle PIP
+	joint8->vCurrent.x = pitches[8] / 100.0 ;
+	//joint8->vCurrent.z = rolls[8] / 100.0;
+	joint8->vCurrent.y = yaws[8] / 100.0 * (3.0/2.0);
+
+	Joint *joint7 = & m_pJoints[6];				//Middle MP
+	joint7->vCurrent.x = pitches[8] / 100.0;
+	//joint7->vCurrent.z = rolls[8] / 100.0;
+	joint7->vCurrent.y = yaws[8] / 100.0 * (1.0/2.0);
+
+	/*
+		Ring finger
+	*/
+	Joint *joint12 = & m_pJoints[11];				//Ring DIP
+	joint12->vCurrent.x = pitches[11] / 100.0;
+	//joint12->vCurrent.z = rolls[11] / 100.0;
+	joint12->vCurrent.y = -yaws[11] / 100.0;
+
+	Joint *joint11 = & m_pJoints[10];				//Ring PIP
+	joint11->vCurrent.x = pitches[11] / 100.0 ;
+	//joint11->vCurrent.z = rolls[11] / 100.0;
+	joint11->vCurrent.y = -yaws[11] / 100.0 * (3.0/2.0);
+
+	Joint *joint10 = & m_pJoints[9];				//Ring MP
+	joint10->vCurrent.x = pitches[11] / 100.0;
+	//joint10->vCurrent.z = rolls[11] / 100.0;
+	joint10->vCurrent.y = yaws[11] / 100.0 * (1.0/2.0);
+
+	/*
+		Little finger
+	*/
+	Joint *joint15 = & m_pJoints[14];				//Little DIP
+	joint15->vCurrent.x = pitches[14] / 100.0;
+	//joint15->vCurrent.z = rolls[14] / 100.0;
+	joint15->vCurrent.y = -yaws[14] / 100.0;
+
+	Joint *joint14 = & m_pJoints[13];				//Little PIP
+	joint14->vCurrent.x = pitches[14] / 100.0 ;
+	//joint14->vCurrent.z = rolls[14] / 100.0;
+	joint14->vCurrent.y = -yaws[14] / 100.0 * (3.0/2.0);
+	
+	Joint *joint13 = & m_pJoints[12];				//Little MP
+	joint13->vCurrent.x = pitches[14] / 100.0;
+	//joint13->vCurrent.z = rolls[14] / 100.0;
+	joint13->vCurrent.y = yaws[14] / 100.0 * (1.0/2.0);
+
+	for(int i = 0; i < m_numJoints; i++) {
+		Matrix motionMatrix;
+		Joint *joint = & m_pJoints[i];
+		//构造旋转矩阵
+		angleMatrix(joint->vCurrent, &motionMatrix);
+
+		//当前局部矩阵 = 初始局部矩阵*动作矩阵，动画矩阵是相对于初始矩阵状态的变换
+		joint->matCurrentLocal = joint->matStaticLocal * motionMatrix; 
+
+		/*
+			求当前全局矩阵
+		*/
+		//如果是根节点,则局部矩阵则为全局矩阵
+		if(strcmp(joint->m_parentName,"") == 0){
+			joint->matCurrentGlobal = joint->matCurrentLocal;
+		}
+		else{//如果不是根节点
+			//找到父节点
+			Joint *parentJoint = & m_pJoints[joint->parentIndex];
+			joint->matCurrentGlobal = parentJoint->matCurrentGlobal * joint->matCurrentLocal;
+		}
+	}
+
+
+
+#pragma endregion extent
+	/*	
+		更新顶点位置
+		重绘
+	*/
+	updateVertices();
 }
 
 /*
@@ -347,74 +631,6 @@ void Model::updateVertices(){
 		}
 	}
 }
-
-//更新后重绘
-void Model::reDraw() 
-{
-	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);				// Clear The Screen And The Depth Buffer
-	//glLoadIdentity();												// Reset The Modelview Matrix
-
-	GLboolean texEnabled = glIsEnabled( GL_TEXTURE_2D );
-	// Draw by group
-	for ( int i = 0; i < m_numMeshes; i++ )
-	{
-		int materialIndex = m_pMeshes[i].m_materialIndex;
-		if ( materialIndex >= 0 )
-		{
-			glMaterialfv( GL_FRONT, GL_AMBIENT, m_pMaterials[materialIndex].m_ambient );
-			glMaterialfv( GL_FRONT, GL_DIFFUSE, m_pMaterials[materialIndex].m_diffuse );
-			glMaterialfv( GL_FRONT, GL_SPECULAR, m_pMaterials[materialIndex].m_specular );
-			glMaterialfv( GL_FRONT, GL_EMISSION, m_pMaterials[materialIndex].m_emissive );
-			glMaterialf( GL_FRONT, GL_SHININESS, m_pMaterials[materialIndex].m_shininess );
-
-			if ( m_pMaterials[materialIndex].m_texture > 0 )
-			{
-				glBindTexture( GL_TEXTURE_2D, m_pMaterials[materialIndex].m_texture );
-				glEnable( GL_TEXTURE_2D );
-			}
-			else
-				glDisable( GL_TEXTURE_2D );
-		}
-		else
-		{
-			// Material properties?
-			glDisable( GL_TEXTURE_2D );
-		}
-
-		glBegin( GL_TRIANGLES );
-		{
-			for ( int j = 0; j < m_pMeshes[i].m_numTriangles; j++ )
-			{
-				int triangleIndex = m_pMeshes[i].m_pTriangleIndices[j];
-				const Triangle* pTri = &m_pTriangles[triangleIndex];
-				
-				glColor3f(1.0f, 0.89f, 0.76f);
-				for ( int k = 0; k < 3; k++ )
-				{
-					int index = pTri->m_vertexIndices[k];
-
-					glNormal3fv( pTri->m_vertexNormals[k] );
-					glTexCoord2f( pTri->m_s[k], pTri->m_t[k] );
-					//重绘是基于变换后的全局坐标的,定义一个临时变量,保存绝对坐标值
-					float absolute[3];
-					//绝对坐标是从每一帧计算出来的.
-					absolute[0] = m_pVertices[index].v_absolute.x;
-					absolute[1] = m_pVertices[index].v_absolute.y;
-					absolute[2] = m_pVertices[index].v_absolute.z;
-
-					glVertex3fv( absolute );
-				}
-			}
-		}
-		glEnd();
-	}
-
-	if ( texEnabled )
-		glEnable( GL_TEXTURE_2D );
-	else
-		glDisable( GL_TEXTURE_2D );
-}
-
 
 void Model::reloadTextures()
 {

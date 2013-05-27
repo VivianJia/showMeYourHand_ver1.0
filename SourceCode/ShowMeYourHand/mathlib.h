@@ -4,7 +4,7 @@
 #include <math.h>
 using namespace Leap; 
 /*
-	构造旋转矩阵
+	构造旋转矩阵，以列序构造
 */
 void angleMatrix(Vector v, Matrix *m);
 

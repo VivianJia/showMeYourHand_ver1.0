@@ -71,22 +71,15 @@ class Model
 			//KeyFrame *m_rotationKeyframes;											//所有的旋转帧
 			//KeyFrame *m_TranslationKeyframes;											//所有的平移帧
 
-			//20 joints from joint1~joint21(skip joint13)
+			Vector vCurrent;
 			
 			//used for rendering
 			int parentIndex;									//父节点索引
 			
-			//float matStaticLocal[4][4];						//初始骨骼局部矩阵
-			//float matStaticGlobal[4][4];						//初始骨骼全局矩阵
-			//float matCurrentLocal[4][4];						//当前局部矩阵
-			//float matCurrentGlobal[4][4];						//当前全局矩阵
-
 			Matrix matStaticLocal;
 			Matrix matStaticGlobal;
 			Matrix matCurrentLocal;
 			Matrix matCurrentGlobal;
-
-			Matrix InverseStaticGlobal;							//初始全局矩阵的逆矩阵
 		};
 
 		struct KeyFrame 
@@ -152,7 +145,8 @@ class Model
 		/*
 			动作帧
 		*/
-		void animation(int *pitches,int *rolls,int *yaws);
+		void animation(float *pitches, float *rolls, float *yaws);
+		void animation(int *pitches, int *rolls, int *yaws);
 		/*
 			更新顶点的绝对位置
 		*/
