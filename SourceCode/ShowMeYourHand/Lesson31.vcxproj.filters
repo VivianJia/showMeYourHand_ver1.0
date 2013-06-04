@@ -30,9 +30,6 @@
     <ClCompile Include="glListener.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="cvSlidebar.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Lesson31.h">
@@ -50,8 +47,8 @@
     <ClInclude Include="glListener.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="cvSlidebar.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
 </Project>

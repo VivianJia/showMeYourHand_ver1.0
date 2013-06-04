@@ -146,7 +146,6 @@ class Model
 			动作帧
 		*/
 		void animation(float *pitches, float *rolls, float *yaws);
-		void animation(int *pitches, int *rolls, int *yaws);
 		/*
 			更新顶点的绝对位置
 		*/

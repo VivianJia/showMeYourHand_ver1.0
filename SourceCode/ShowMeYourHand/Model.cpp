@@ -267,176 +267,6 @@ Vector Model::getPitch(Vector v){
 	
 }
 
-//reload animate
-void Model::animation (int *pitches, int *rolls, int *yaws){
-	/*
-		1 实际阶段:当获取到一个Leap的更新帧, 利用帧数据进行刷新
-		2 模拟阶段:利用已有的数据进行骨骼的重置
-	*/
-
-	/* 
-		3 用opencv的trackbar绘制滑动条控制角度  
-	*/
-#pragma region no restrict
-	//for(int i = 0; i < m_numJoints; i ++) {
-	//	Joint *joint = & m_pJoints[i];
-	//	/*
-	//		求当前动作矩阵，该矩阵基于初始局部变换
-	//	*/
-	//	Matrix motionMatrix;
-	//	Vector vTemp;
-	//	//修改关节角
-	//	vTemp.x = pitches[i] / 100.0;
-	//	vTemp.z = rolls[i] / 100.0;
-	//	vTemp.y = yaws[i] / 100.0;
-	//	//设定矩阵的旋转
-	//	angleMatrix(vTemp,&motionMatrix);
-
-	//	//当前局部矩阵 = 初始局部矩阵*动作矩阵，程序设定的变换是基于初始局部
-	//	joint->matCurrentLocal =joint->matStaticLocal * motionMatrix; 
-
-	//	/*
-	//		求当前全局矩阵
-	//	*/
-	//	//如果是根节点,则局部矩阵则为全局矩阵
-	//	if(strcmp(joint->m_parentName,"") == 0){
-	//		joint->matCurrentGlobal = joint->matCurrentLocal;
-	//	}
-	//	else{//如果不是根节点
-	//		//找到父节点
-	//		Joint *parentJoint = & m_pJoints[joint->parentIndex];
-	//		joint->matCurrentGlobal = parentJoint->matCurrentGlobal * joint->matCurrentLocal;
-	//	}
-	//}
-#pragma endregion no restrict
-
-#pragma region extent
-	/*
-		wrist
-	*/
-	Joint *joint1 = &m_pJoints[0];
-	joint1->vCurrent.x = pitches[0] / 100.0;
-	joint1->vCurrent.y = rolls[0] / 100.0;
-	joint1->vCurrent.z = yaws[0] / 100.0;
-
-	/*
-		Thumb finger
-	*/
-	Joint *joint3 = & m_pJoints[2];				//Thumb DIP
-	joint3->vCurrent.x = pitches[2] / 100.0;
-	//joint6->vCurrent.z = rolls[2] / 100.0;
-	joint3->vCurrent.y = yaws[2] / 100.0;
-
-	Joint *joint2 = & m_pJoints[1];				//Index MP
-	joint2->vCurrent.x = pitches[2] / 100.0;
-	//joint4->vCurrent.z = rolls[2] / 100.0;
-	joint2->vCurrent.y = yaws[2] / 100.0 * (1.0/2.0);
-	
-	/*
-		Index finger
-	*/
-	Joint *joint6 = & m_pJoints[5];				//Index DIP
-	joint6->vCurrent.x = pitches[5] / 100.0;
-	//joint6->vCurrent.z = rolls[5] / 100.0;
-	joint6->vCurrent.y = -yaws[5] / 100.0;
-
-	Joint *joint5 = & m_pJoints[4];				//Index PIP
-	joint5->vCurrent.x = pitches[5] / 100.0 ;
-	//joint5->vCurrent.z = rolls[5] / 100.0;
-	joint5->vCurrent.y = -yaws[5] / 100.0* (3.0/2.0);
-
-	Joint *joint4 = & m_pJoints[3];				//Index MP
-	joint4->vCurrent.x = -pitches[5] / 100.0;
-	//joint4->vCurrent.z = rolls[5] / 100.0;
-	joint4->vCurrent.y = yaws[5] / 100.0 * (1.0/2.0);
-
-	/*
-		Middle finger
-	*/
-	Joint *joint9 = & m_pJoints[8];				//Middle DIP
-	joint9->vCurrent.x = pitches[8] / 100.0;
-	//joint9->vCurrent.z = rolls[8] / 100.0;
-	joint9->vCurrent.y = yaws[8] / 100.0;
-
-	Joint *joint8 = & m_pJoints[7];				//Middle PIP
-	joint8->vCurrent.x = pitches[8] / 100.0 ;
-	//joint8->vCurrent.z = rolls[8] / 100.0;
-	joint8->vCurrent.y = yaws[8] / 100.0 * (3.0/2.0);
-
-	Joint *joint7 = & m_pJoints[6];				//Middle MP
-	joint7->vCurrent.x = pitches[8] / 100.0;
-	//joint7->vCurrent.z = rolls[8] / 100.0;
-	joint7->vCurrent.y = yaws[8] / 100.0 * (1.0/2.0);
-
-	/*
-		Ring finger
-	*/
-	Joint *joint12 = & m_pJoints[11];				//Ring DIP
-	joint12->vCurrent.x = pitches[11] / 100.0;
-	//joint12->vCurrent.z = rolls[11] / 100.0;
-	joint12->vCurrent.y = -yaws[11] / 100.0;
-
-	Joint *joint11 = & m_pJoints[10];				//Ring PIP
-	joint11->vCurrent.x = pitches[11] / 100.0 ;
-	//joint11->vCurrent.z = rolls[11] / 100.0;
-	joint11->vCurrent.y = -yaws[11] / 100.0 * (3.0/2.0);
-
-	Joint *joint10 = & m_pJoints[9];				//Ring MP
-	joint10->vCurrent.x = pitches[11] / 100.0;
-	//joint10->vCurrent.z = rolls[11] / 100.0;
-	joint10->vCurrent.y = yaws[11] / 100.0 * (1.0/2.0);
-
-	/*
-		Little finger
-	*/
-	Joint *joint15 = & m_pJoints[14];				//Little DIP
-	joint15->vCurrent.x = pitches[14] / 100.0;
-	//joint15->vCurrent.z = rolls[14] / 100.0;
-	joint15->vCurrent.y = -yaws[14] / 100.0;
-
-	Joint *joint14 = & m_pJoints[13];				//Little PIP
-	joint14->vCurrent.x = pitches[14] / 100.0 ;
-	//joint14->vCurrent.z = rolls[14] / 100.0;
-	joint14->vCurrent.y = -yaws[14] / 100.0 * (3.0/2.0);
-	
-	Joint *joint13 = & m_pJoints[12];				//Little MP
-	joint13->vCurrent.x = pitches[14] / 100.0;
-	//joint13->vCurrent.z = rolls[14] / 100.0;
-	joint13->vCurrent.y = yaws[14] / 100.0 * (1.0/2.0);
-
-	for(int i = 0; i < m_numJoints; i++) {
-		Matrix motionMatrix;
-		Joint *joint = & m_pJoints[i];
-		//构造旋转矩阵
-		angleMatrix(joint->vCurrent, &motionMatrix);
-
-		//当前局部矩阵 = 初始局部矩阵*动作矩阵，动画矩阵是相对于初始矩阵状态的变换
-		joint->matCurrentLocal = joint->matStaticLocal * motionMatrix; 
-
-		/*
-			求当前全局矩阵
-		*/
-		//如果是根节点,则局部矩阵则为全局矩阵
-		if(strcmp(joint->m_parentName,"") == 0){
-			joint->matCurrentGlobal = joint->matCurrentLocal;
-		}
-		else{//如果不是根节点
-			//找到父节点
-			Joint *parentJoint = & m_pJoints[joint->parentIndex];
-			joint->matCurrentGlobal = parentJoint->matCurrentGlobal * joint->matCurrentLocal;
-		}
-	}
-
-
-
-#pragma endregion extent
-	/*	
-		更新顶点位置
-		重绘
-	*/
-	updateVertices();
-}
-
 //animate
 void Model::animation (float *pitches, float *rolls, float *yaws){
 	/*
@@ -444,135 +274,101 @@ void Model::animation (float *pitches, float *rolls, float *yaws){
 		2 模拟阶段:利用已有的数据进行骨骼的重置
 	*/
 
-	/* 
-		3 用opencv的trackbar绘制滑动条控制角度  
-	*/
-#pragma region no restrict
-	//for(int i = 0; i < m_numJoints; i ++) {
-	//	Joint *joint = & m_pJoints[i];
-	//	/*
-	//		求当前动作矩阵，该矩阵基于初始局部变换
-	//	*/
-	//	Matrix motionMatrix;
-	//	Vector vTemp;
-	//	//修改关节角
-	//	vTemp.x = pitches[i] / 100.0;
-	//	vTemp.z = rolls[i] / 100.0;
-	//	vTemp.y = yaws[i] / 100.0;
-	//	//设定矩阵的旋转
-	//	angleMatrix(vTemp,&motionMatrix);
-
-	//	//当前局部矩阵 = 初始局部矩阵*动作矩阵，程序设定的变换是基于初始局部
-	//	joint->matCurrentLocal =joint->matStaticLocal * motionMatrix; 
-
-	//	/*
-	//		求当前全局矩阵
-	//	*/
-	//	//如果是根节点,则局部矩阵则为全局矩阵
-	//	if(strcmp(joint->m_parentName,"") == 0){
-	//		joint->matCurrentGlobal = joint->matCurrentLocal;
-	//	}
-	//	else{//如果不是根节点
-	//		//找到父节点
-	//		Joint *parentJoint = & m_pJoints[joint->parentIndex];
-	//		joint->matCurrentGlobal = parentJoint->matCurrentGlobal * joint->matCurrentLocal;
-	//	}
-	//}
-#pragma endregion no restrict
 
 #pragma region extent
+	float fix = 0.0f;
 	/*
 		wrist
 	*/
 	Joint *joint1 = &m_pJoints[0];
-	joint1->vCurrent.x = pitches[0] / 100.0;
-	joint1->vCurrent.y = rolls[0] / 100.0;
-	joint1->vCurrent.z = yaws[0] / 100.0;
+	joint1->vCurrent.x = pitches[0];
+	joint1->vCurrent.y = rolls[0];
+	joint1->vCurrent.z = yaws[0];
 
 	/*
 		Thumb finger
 	*/
 	Joint *joint3 = & m_pJoints[2];				//Thumb DIP
-	joint3->vCurrent.x = pitches[2] / 100.0;
-	//joint6->vCurrent.z = rolls[2] / 100.0;
-	joint3->vCurrent.y = yaws[2] / 100.0;
+	joint3->vCurrent.x = pitches[2];
+	//joint6->vCurrent.z = rolls[2] ;
+	joint3->vCurrent.y = yaws[2];
 
 	Joint *joint2 = & m_pJoints[1];				//Index MP
-	joint2->vCurrent.x = pitches[2] / 100.0;
-	//joint4->vCurrent.z = rolls[2] / 100.0;
-	joint2->vCurrent.y = yaws[2] / 100.0 * (1.0/2.0);
+	joint2->vCurrent.x = pitches[2] ;
+	//joint4->vCurrent.z = rolls[2] ;
+	joint2->vCurrent.y = yaws[2] * (1.0/2.0);
 	
 	/*
 		Index finger
 	*/
 	Joint *joint6 = & m_pJoints[5];				//Index DIP
-	joint6->vCurrent.x = pitches[5] / 100.0;
-	//joint6->vCurrent.z = rolls[5] / 100.0;
-	joint6->vCurrent.y = -yaws[5] / 100.0;
+	joint6->vCurrent.x = pitches[5] ;
+	//joint6->vCurrent.z = rolls[5] ;
+	joint6->vCurrent.y = -yaws[5] + fix ;
 
 	Joint *joint5 = & m_pJoints[4];				//Index PIP
-	joint5->vCurrent.x = pitches[5] / 100.0 ;
-	//joint5->vCurrent.z = rolls[5] / 100.0;
-	joint5->vCurrent.y = -yaws[5] / 100.0* (3.0/2.0);
+	joint5->vCurrent.x = pitches[5] ;
+	//joint5->vCurrent.z = rolls[5] ;
+	joint5->vCurrent.y = -yaws[5] * (3.0/2.0);
 
 	Joint *joint4 = & m_pJoints[3];				//Index MP
-	joint4->vCurrent.x = -pitches[5] / 100.0;
-	//joint4->vCurrent.z = rolls[5] / 100.0;
-	joint4->vCurrent.y = yaws[5] / 100.0 * (1.0/2.0);
+	joint4->vCurrent.x = -pitches[5];
+	//joint4->vCurrent.z = rolls[5] ;1
+	joint4->vCurrent.y = yaws[5]  * (1.0/2.0);
 
 	/*
 		Middle finger
 	*/
 	Joint *joint9 = & m_pJoints[8];				//Middle DIP
-	joint9->vCurrent.x = pitches[8] / 100.0;
-	//joint9->vCurrent.z = rolls[8] / 100.0;
-	joint9->vCurrent.y = yaws[8] / 100.0;
+	joint9->vCurrent.x = pitches[8];
+	//joint9->vCurrent.z = rolls[8];
+	joint9->vCurrent.y = yaws[8]+ fix;
 
 	Joint *joint8 = & m_pJoints[7];				//Middle PIP
-	joint8->vCurrent.x = pitches[8] / 100.0 ;
-	//joint8->vCurrent.z = rolls[8] / 100.0;
-	joint8->vCurrent.y = yaws[8] / 100.0 * (3.0/2.0);
+	joint8->vCurrent.x = pitches[8];
+	//joint8->vCurrent.z = rolls[8];
+	joint8->vCurrent.y = yaws[8] * (3.0/2.0);
 
 	Joint *joint7 = & m_pJoints[6];				//Middle MP
-	joint7->vCurrent.x = pitches[8] / 100.0;
-	//joint7->vCurrent.z = rolls[8] / 100.0;
-	joint7->vCurrent.y = yaws[8] / 100.0 * (1.0/2.0);
+	joint7->vCurrent.x = pitches[8] ;
+	//joint7->vCurrent.z = rolls[8];
+	joint7->vCurrent.y = yaws[8] * (1.0/2.0);
 
 	/*
 		Ring finger
 	*/
 	Joint *joint12 = & m_pJoints[11];				//Ring DIP
-	joint12->vCurrent.x = pitches[11] / 100.0;
-	//joint12->vCurrent.z = rolls[11] / 100.0;
-	joint12->vCurrent.y = -yaws[11] / 100.0;
+	joint12->vCurrent.x = pitches[11] ;
+	//joint12->vCurrent.z = rolls[11];
+	joint12->vCurrent.y = -yaws[11]+ fix;
 
 	Joint *joint11 = & m_pJoints[10];				//Ring PIP
-	joint11->vCurrent.x = pitches[11] / 100.0 ;
-	//joint11->vCurrent.z = rolls[11] / 100.0;
-	joint11->vCurrent.y = -yaws[11] / 100.0 * (3.0/2.0);
+	joint11->vCurrent.x = pitches[11] ;
+	//joint11->vCurrent.z = rolls[11];
+	joint11->vCurrent.y = -yaws[11] * (3.0/2.0);
 
 	Joint *joint10 = & m_pJoints[9];				//Ring MP
-	joint10->vCurrent.x = pitches[11] / 100.0;
-	//joint10->vCurrent.z = rolls[11] / 100.0;
-	joint10->vCurrent.y = yaws[11] / 100.0 * (1.0/2.0);
+	joint10->vCurrent.x = pitches[11];
+	//joint10->vCurrent.z = rolls[11];
+	joint10->vCurrent.y = yaws[11] * (1.0/2.0);
 
 	/*
 		Little finger
 	*/
 	Joint *joint15 = & m_pJoints[14];				//Little DIP
-	joint15->vCurrent.x = pitches[14] / 100.0;
-	//joint15->vCurrent.z = rolls[14] / 100.0;
-	joint15->vCurrent.y = -yaws[14] / 100.0;
+	joint15->vCurrent.x = pitches[14];
+	//joint15->vCurrent.z = rolls[14];
+	joint15->vCurrent.y = -yaws[14] + fix;
 
 	Joint *joint14 = & m_pJoints[13];				//Little PIP
-	joint14->vCurrent.x = pitches[14] / 100.0 ;
-	//joint14->vCurrent.z = rolls[14] / 100.0;
-	joint14->vCurrent.y = -yaws[14] / 100.0 * (3.0/2.0);
+	joint14->vCurrent.x = pitches[14];
+	//joint14->vCurrent.z = rolls[14];
+	joint14->vCurrent.y = -yaws[14] * (3.0/2.0);
 	
 	Joint *joint13 = & m_pJoints[12];				//Little MP
-	joint13->vCurrent.x = pitches[14] / 100.0;
-	//joint13->vCurrent.z = rolls[14] / 100.0;
-	joint13->vCurrent.y = yaws[14] / 100.0 * (1.0/2.0);
+	joint13->vCurrent.x = pitches[14];
+	//joint13->vCurrent.z = rolls[14];
+	joint13->vCurrent.y = yaws[14] * (1.0/2.0);
 
 	for(int i = 0; i < m_numJoints; i++) {
 		Matrix motionMatrix;
@@ -596,7 +392,6 @@ void Model::animation (float *pitches, float *rolls, float *yaws){
 			joint->matCurrentGlobal = parentJoint->matCurrentGlobal * joint->matCurrentLocal;
 		}
 	}
-
 
 
 #pragma endregion extent

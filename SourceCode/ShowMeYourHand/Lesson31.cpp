@@ -7,7 +7,6 @@
 #include <leap.h>													// Header File For The Leap Functions
 #include "glListener.h"
 #include "MilkshapeModel.h"											// Header File For Milkshape File
-#include "cvSlidebar.h"
 
 #pragma comment( lib, "opengl32.lib" )								// Search For OpenGL32.lib While Linking ( NEW )
 #pragma comment( lib, "glu32.lib" )									// Search For GLu32.lib While Linking    ( NEW )
@@ -134,6 +133,8 @@ int DrawGLScene(GLvoid)												// Here's Where We Do All The Drawing
 	glLoadIdentity();												// Reset The Modelview Matrix
 	//gluLookAt( 75, 75, 10, 0, 0, 0, 0, 1, 0 );					// (3) Eye Postion (3) Center Point (3) Y-Axis Up Vector
 	glTranslatef(0.0f,10.0f,-70.0f);
+	glRotatef(180.0f,0.0f,1.0f,0.0f);			
+	//glRotatef(90.0f,1.0f,0.0f,0.0f);			
 
 	//模型移动
 	glTranslatef(xpos,0.0f,0.0f);
@@ -144,8 +145,6 @@ int DrawGLScene(GLvoid)												// Here's Where We Do All The Drawing
 	glRotatef(yrot,0.0f,1.0f,0.0f);									 
 	glRotatef(zrot,0.0f,0.0f,1.0f);									 
 													
-	/*if(pModel->flag == 1)
-	pModel->reDraw();*/
 	pModel->draw();	
 	return TRUE;													// Keep Going
 }
@@ -423,61 +422,61 @@ LRESULT CALLBACK WndProc(	HWND	hWnd,							// Handle For This Window
 	// Pass All Unhandled Messages To DefWindowProc
 	return DefWindowProc(hWnd,uMsg,wParam,lParam);
 }
-//callback function
-void onSlided(int, void*){
-	int pitch[15],roll[15],yaw[15];
-	//获取每个trackbar的位置
-	for(int i = 1; i <= 15; i++) {
-		/*
-			将 int型: i 转换为 char型:ch 
-		*/
-		//先定义一个字符串流对象
-		stringstream ss;
-		//输入流对象
-		ss << i;
-		//转换为string
-		string str = ss.str();
-		str = "joint" + str;
-		//转换为const char
-		const char *ch = str.c_str();
-
-		//获取trackbar的位置
-		pitch[i - 1] = cvGetTrackbarPos(ch, "PitchAngle");
-		roll[i - 1] = cvGetTrackbarPos(ch, "RollAngle");
-		yaw[i - 1] = cvGetTrackbarPos(ch, "YawAngle");
-	}
-	pModel->animation(pitch,roll,yaw);
-}
-
+float pitches[15],rolls[15],yaws[15];
 //callback function
 void glListener::onFrame(const Controller& controller){
-	float pitches[15],rolls[15],yaws[15];
-	//memset(pitches, 0,sizeof(pitches));
-	//memset(rolls, 0,sizeof(rolls));
-	//memset(yaws, 0,sizeof(yaws));
+	
+	/*memset(pitches, 0,sizeof(pitches));
+	memset(rolls, 0,sizeof(rolls));
+	memset(yaws, 0,sizeof(yaws));*/
 	//Get the most recent frame and report some basic information
 	const Frame frame = controller.frame();
-	if(!frame.hands().empty()) {
+	if(!frame.hands().empty()) 
+	{
 		//get the first hand
 		const Hand hand = frame.hands()[0];
+		//wrist
+		pitches[0] = hand.palmNormal().pitch();
+		rolls[0] = hand.palmNormal().roll();
+		yaws[0] = hand.palmNormal().yaw();
+
+		/*pitches[0] = hand.direction().pitch();
+		rolls[0] = hand.direction().roll();
+		yaws[0] = hand.direction().yaw();*/
 
 		//check if the hand has any fingers
 		const FingerList fingers = hand.fingers();
-		if (!fingers.empty()) {
+		//如果检测到手指且手指的数目等于5
+		if (!fingers.empty() && fingers.count() == 5) {
+			
+			/*for(int i = 0; i < fingers.count(); i++) {
+				
+			}*/
 			//Thumb
-			yaws[2] = fingers[3].direction().pitch();
+			yaws[2] = -fingers.leftmost().direction().pitch();
 			//Index
-			yaws[5] = fingers[1].direction().pitch();
+			yaws[5] = -fingers[2].direction().pitch();
 			//Middle
-			yaws[8]= fingers[0].direction().pitch();
+			yaws[8]= -fingers[0].direction().pitch();
 			//Ring
-			yaws[11]= fingers[2].direction().pitch();
+			yaws[11]= -fingers[1].direction().pitch();
 			//Little
-			yaws[14]= fingers[4].direction().pitch();
+			yaws[14]= -fingers.rightmost().direction().pitch();
+			float temp = 0;
+			//if index is at the right of ring
+			if(fingers[2].tipPosition().x > fingers[1].tipPosition().x) {
+				//swap the pitch angle of index and ring
+				temp = yaws[5];
+				yaws[5] = yaws[11];
+				yaws[11] = temp;
+			}
 		}
 	}
 	pModel->animation(pitches,rolls,yaws);
 }
+
+glListener listener;
+Controller controller;
 
 int WINAPI WinMain(	HINSTANCE	hInstance,							// Instance
 					HINSTANCE	hPrevInstance,						// Previous Instance
@@ -508,80 +507,7 @@ int WINAPI WinMain(	HINSTANCE	hInstance,							// Instance
 	{
 		return 0;													// Quit If Window Was Not Created
 	}
-#pragma region opencv
-	int angleSlider = 0; 
-	int sliderMax = 2 * PI * 100;
-	//在这里创建一个调节pitch角的opencv窗口
-	cvNamedWindow("PitchAngle", CV_WINDOW_AUTOSIZE);
-	cvResizeWindow("PitchAngle", 300,850);
-	cvMoveWindow("PitchAngle", 650,0);
-	
-	/*
-		创建20个Joint的局部pitch角调节,回调函数相同
-	*/
-	createTrackbar("joint1", "PitchAngle",&angleSlider,sliderMax, onSlided);
-	createTrackbar("joint2", "PitchAngle",&angleSlider,sliderMax, onSlided);
-	createTrackbar("joint3", "PitchAngle",&angleSlider,sliderMax, onSlided);
-	createTrackbar("joint4", "PitchAngle",&angleSlider,sliderMax, onSlided);
-	createTrackbar("joint5", "PitchAngle",&angleSlider,sliderMax, onSlided);
-	createTrackbar("joint6", "PitchAngle",&angleSlider,sliderMax, onSlided);
-	createTrackbar("joint7", "PitchAngle",&angleSlider,sliderMax, onSlided);
-	createTrackbar("joint8", "PitchAngle",&angleSlider,sliderMax, onSlided);
-	createTrackbar("joint9", "PitchAngle",&angleSlider,sliderMax, onSlided);
-	createTrackbar("joint10", "PitchAngle",&angleSlider,sliderMax, onSlided);
-	createTrackbar("joint11", "PitchAngle",&angleSlider,sliderMax, onSlided);
-	createTrackbar("joint12", "PitchAngle",&angleSlider,sliderMax, onSlided);
-	createTrackbar("joint13", "PitchAngle",&angleSlider,sliderMax, onSlided);
-	createTrackbar("joint14", "PitchAngle",&angleSlider,sliderMax, onSlided);
-	createTrackbar("joint15", "PitchAngle",&angleSlider,sliderMax, onSlided);
-
-	cvNamedWindow("RollAngle", CV_WINDOW_AUTOSIZE);
-	cvResizeWindow("RollAngle", 300,850);
-	cvMoveWindow("RollAngle", 850,0);
-	
-	/*
-		创建20个Joint的局部Row角调节,回调函数相同
-	*/
-	createTrackbar("joint1", "RollAngle",&angleSlider,sliderMax, onSlided);
-	createTrackbar("joint2", "RollAngle",&angleSlider,sliderMax, onSlided);
-	createTrackbar("joint3", "RollAngle",&angleSlider,sliderMax, onSlided);
-	createTrackbar("joint4", "RollAngle",&angleSlider,sliderMax, onSlided);
-	createTrackbar("joint5", "RollAngle",&angleSlider,sliderMax, onSlided);
-	createTrackbar("joint6", "RollAngle",&angleSlider,sliderMax, onSlided);
-	createTrackbar("joint7", "RollAngle",&angleSlider,sliderMax, onSlided);
-	createTrackbar("joint8", "RollAngle",&angleSlider,sliderMax, onSlided);
-	createTrackbar("joint9", "RollAngle",&angleSlider,sliderMax, onSlided);
-	createTrackbar("joint10", "RollAngle",&angleSlider,sliderMax, onSlided);
-	createTrackbar("joint11", "RollAngle",&angleSlider,sliderMax, onSlided);
-	createTrackbar("joint12", "RollAngle",&angleSlider,sliderMax, onSlided);
-	createTrackbar("joint13", "RollAngle",&angleSlider,sliderMax, onSlided);
-	createTrackbar("joint14", "RollAngle",&angleSlider,sliderMax, onSlided);
-	createTrackbar("joint15", "RollAngle",&angleSlider,sliderMax, onSlided);
-
-	cvNamedWindow("YawAngle", CV_WINDOW_AUTOSIZE);
-	cvResizeWindow("YawAngle", 300,850);
-	cvMoveWindow("YawAngle", 1050,0);
-	
-	/*
-		创建20个Joint的局部yaw角调节,回调函数相同
-	*/
-	createTrackbar("joint1", "YawAngle",&angleSlider,sliderMax, onSlided);
-	createTrackbar("joint2", "YawAngle",&angleSlider,sliderMax, onSlided);
-	createTrackbar("joint3", "YawAngle",&angleSlider,sliderMax, onSlided);
-	createTrackbar("joint4", "YawAngle",&angleSlider,sliderMax, onSlided);
-	createTrackbar("joint5", "YawAngle",&angleSlider,sliderMax, onSlided);
-	createTrackbar("joint6", "YawAngle",&angleSlider,sliderMax, onSlided);
-	createTrackbar("joint7", "YawAngle",&angleSlider,sliderMax, onSlided);
-	createTrackbar("joint8", "YawAngle",&angleSlider,sliderMax, onSlided);
-	createTrackbar("joint9", "YawAngle",&angleSlider,sliderMax, onSlided);
-	createTrackbar("joint10", "YawAngle",&angleSlider,sliderMax, onSlided);
-	createTrackbar("joint11", "YawAngle",&angleSlider,sliderMax, onSlided);
-	createTrackbar("joint12", "YawAngle",&angleSlider,sliderMax, onSlided);
-	createTrackbar("joint13", "YawAngle",&angleSlider,sliderMax, onSlided);
-	createTrackbar("joint14", "YawAngle",&angleSlider,sliderMax, onSlided);
-	createTrackbar("joint15", "YawAngle",&angleSlider,sliderMax, onSlided);
-#pragma endregion opencv 
-
+	controller.addListener(listener);
 	
 	while(!done)													// Loop That Runs While done=FALSE
 	{
@@ -670,13 +596,6 @@ int WINAPI WinMain(	HINSTANCE	hInstance,							// Instance
 		if(keys['p']){
 			
 		}
-
-//#pragma region LeapMotion
-//		glListener listener;
-//		Controller controller;
-//		controller.addListener(listener);
-//		listener.onFrame(controller);
-//#pragma endregion LeapMotion
 	}
 
 	// Shutdown

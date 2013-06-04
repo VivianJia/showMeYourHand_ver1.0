@@ -1,0 +1,123 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="glListener">
+    <Position X="10" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAAAAAAAAAAABAABAAAAAIABQAAAAAAIAA=</HashCode>
+      <FileName>glListener.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MilkshapeModel">
+    <Position X="4" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>MilkshapeModel.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Model">
+    <Position X="0.75" Y="0.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Struct Name="Model::Mesh">
+        <TypeIdentifier>
+          <NewMemberFileName>Model.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+      <Struct Name="Model::Material">
+        <TypeIdentifier>
+          <NewMemberFileName>Model.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+      <Struct Name="Model::Triangle">
+        <TypeIdentifier>
+          <NewMemberFileName>Model.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+      <Struct Name="Model::Vertex">
+        <TypeIdentifier>
+          <NewMemberFileName>Model.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+      <Struct Name="Model::KeyFrame">
+        <TypeIdentifier>
+          <NewMemberFileName>Model.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+      <Struct Name="Model::Joint">
+        <TypeIdentifier>
+          <NewMemberFileName>Model.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AQABAwEAAoiAAAAAQoJQgIAAAwgAAEAAhA4AAAAAAAI=</HashCode>
+      <FileName>Model.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="MS3DHeader">
+    <Position X="2.75" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAEAAAAAAA=</HashCode>
+      <FileName>MilkshapeModel.cpp</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="MS3DVertex">
+    <Position X="10" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAQAAAGAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MilkshapeModel.cpp</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="MS3DTriangle">
+    <Position X="7.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAQAEAAAAAAAAAAAAAAQAAAAAAAQAgAAAAAAAA=</HashCode>
+      <FileName>MilkshapeModel.cpp</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="MS3DMaterial">
+    <Position X="5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAQUAAAAAAAAAAEAAAAAAIAAAACChAAAAAAAAAAA=</HashCode>
+      <FileName>MilkshapeModel.cpp</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="MS3DKeyframe">
+    <Position X="5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MilkshapeModel.cpp</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="MS3DJoint">
+    <Position X="7.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAAEAAAIAAAAAAAAAQAAAgCAAAAAAAAAEAAAA=</HashCode>
+      <FileName>MilkshapeModel.cpp</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="colorArray">
+    <Position X="3" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAQABAAAAAAA=</HashCode>
+      <FileName>Lesson31.cpp</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Typedef Name="byte" Collapsed="true">
+    <Position X="2.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MilkshapeModel.cpp</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="word" Collapsed="true">
+    <Position X="2.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MilkshapeModel.cpp</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Font Name="微软雅黑" Size="9.75" />
+</ClassDiagram>

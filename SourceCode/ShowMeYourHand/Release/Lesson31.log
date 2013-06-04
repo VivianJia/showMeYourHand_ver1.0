@@ -1,51 +1,93 @@
-﻿生成启动时间为 2013/5/14 16:34:12。
-     1>项目“D:\VivianJia\备份0513\ShowMeYourHand\Lesson31.vcxproj”在节点 2 上(build 个目标)。
+﻿生成启动时间为 2013/5/27 17:35:05。
+     1>项目“E:\VivianJia\备份0527-Leap\ShowMeYourHand\Lesson31.vcxproj”在节点 2 上(build 个目标)。
      1>InitializeBuildStatus:
-         正在创建“.\Release\Lesson31.unsuccessfulbuild”，因为已指定“AlwaysCreate”。
+         正在对“.\Release\Lesson31.unsuccessfulbuild”执行 Touch 任务。
        ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /O2 /Ob1 /Oy- /D WIN32 /D NDEBUG /D _WINDOWS /D _VC80_UPGRADE=0x0600 /D _MBCS /GF /Gm- /EHsc /MT /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo".\Release\\" /Fd".\Release\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt glListener.cpp Lesson31.cpp mathlib.cpp MilkshapeModel.cpp Model.cpp
+         d:\Program Files\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /O2 /Ob1 /Oy- /D WIN32 /D NDEBUG /D _WINDOWS /D _VC80_UPGRADE=0x0600 /D _MBCS /GF /Gm- /EHsc /MT /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo".\Release\\" /Fd".\Release\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt glListener.cpp Lesson31.cpp mathlib.cpp MilkshapeModel.cpp Model.cpp
          glListener.cpp
          Lesson31.cpp
+     1>d:\Program Files\Microsoft Visual Studio 10.0\VC\include\gl\gl.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+     1>d:\Program Files\Microsoft Visual Studio 10.0\VC\include\GL/gl.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+     1>d:\Program Files\Microsoft Visual Studio 10.0\VC\include\gl\gl.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
      1>Lesson31.cpp(50): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-                 C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(234) : 参见“fopen”的声明
+                 d:\Program Files\Microsoft Visual Studio 10.0\VC\include\stdio.h(234) : 参见“fopen”的声明
          mathlib.cpp
+     1>mathlib.cpp(59): warning C4018: “<”: 有符号/无符号不匹配
          MilkshapeModel.cpp
+     1>d:\Program Files\Microsoft Visual Studio 10.0\VC\include\gl\gl.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
      1>MilkshapeModel.cpp(139): warning C4244: “初始化”: 从“std::streamoff”转换到“long”，可能丢失数据
      1>MilkshapeModel.cpp(230): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-                 C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\string.h(105) : 参见“strcpy”的声明
+                 d:\Program Files\Microsoft Visual Studio 10.0\VC\include\string.h(105) : 参见“strcpy”的声明
      1>MilkshapeModel.cpp(245): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-                 C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\string.h(105) : 参见“strcpy”的声明
+                 d:\Program Files\Microsoft Visual Studio 10.0\VC\include\string.h(105) : 参见“strcpy”的声明
      1>MilkshapeModel.cpp(246): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-                 C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\string.h(105) : 参见“strcpy”的声明
+                 d:\Program Files\Microsoft Visual Studio 10.0\VC\include\string.h(105) : 参见“strcpy”的声明
          Model.cpp
-     1>Model.cpp(199): warning C4101: “mTr”: 未引用的局部变量
+     1>d:\Program Files\Microsoft Visual Studio 10.0\VC\include\gl\gl.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+     1>Model.cpp(133): warning C4305: “参数”: 从“double”到“GLfloat”截断
+     1>Model.cpp(133): warning C4305: “参数”: 从“double”到“GLfloat”截断
+     1>Model.cpp(133): warning C4305: “参数”: 从“double”到“GLfloat”截断
+     1>Model.cpp(134): warning C4305: “参数”: 从“double”到“GLfloat”截断
+     1>Model.cpp(134): warning C4305: “参数”: 从“double”到“GLfloat”截断
+     1>Model.cpp(135): warning C4305: “参数”: 从“double”到“GLfloat”截断
+     1>Model.cpp(135): warning C4305: “参数”: 从“double”到“GLfloat”截断
+     1>Model.cpp(135): warning C4305: “参数”: 从“double”到“GLfloat”截断
+     1>Model.cpp(136): warning C4305: “参数”: 从“double”到“GLfloat”截断
+     1>Model.cpp(137): warning C4305: “参数”: 从“double”到“GLfloat”截断
+     1>Model.cpp(137): warning C4305: “参数”: 从“double”到“GLfloat”截断
+     1>Model.cpp(137): warning C4305: “参数”: 从“double”到“GLfloat”截断
+     1>Model.cpp(138): warning C4305: “参数”: 从“double”到“GLfloat”截断
+     1>Model.cpp(138): warning C4305: “参数”: 从“double”到“GLfloat”截断
+     1>Model.cpp(143): warning C4305: “参数”: 从“double”到“GLfloat”截断
+     1>Model.cpp(143): warning C4305: “参数”: 从“double”到“GLfloat”截断
+     1>Model.cpp(144): warning C4305: “参数”: 从“double”到“GLfloat”截断
+     1>Model.cpp(144): warning C4305: “参数”: 从“double”到“GLfloat”截断
+     1>Model.cpp(144): warning C4305: “参数”: 从“double”到“GLfloat”截断
+     1>Model.cpp(145): warning C4305: “参数”: 从“double”到“GLfloat”截断
+     1>Model.cpp(145): warning C4305: “参数”: 从“double”到“GLfloat”截断
+     1>Model.cpp(145): warning C4305: “参数”: 从“double”到“GLfloat”截断
+     1>Model.cpp(283): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>Model.cpp(284): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>Model.cpp(285): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>Model.cpp(291): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>Model.cpp(293): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>Model.cpp(296): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>Model.cpp(298): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>Model.cpp(304): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>Model.cpp(306): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>Model.cpp(309): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>Model.cpp(311): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>Model.cpp(314): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>Model.cpp(316): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>Model.cpp(322): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>Model.cpp(324): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>Model.cpp(327): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>Model.cpp(329): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>Model.cpp(332): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>Model.cpp(334): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>Model.cpp(340): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>Model.cpp(342): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>Model.cpp(345): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>Model.cpp(347): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>Model.cpp(350): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>Model.cpp(352): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>Model.cpp(358): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>Model.cpp(360): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>Model.cpp(363): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>Model.cpp(365): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>Model.cpp(368): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>Model.cpp(370): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
          正在生成代码...
-     1>d:\vivianjia\备份0513\showmeyourhand\model.cpp(150): warning C4715: “Model::findJointByName”: 不是所有的控件路径都返回值
+     1>e:\vivianjia\备份0527-leap\showmeyourhand\model.cpp(177): warning C4715: “Model::findJointByName”: 不是所有的控件路径都返回值
        Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:".\Release\Lesson31.exe" /INCREMENTAL:NO /NOLOGO opengl32.lib glu32.lib glaux.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:".\Release\Lesson31.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /PDB:"D:\VivianJia\备份0513\ShowMeYourHand\Release\Lesson31.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:".\Release\Lesson31.lib" /MACHINE:X86 .\Release\glListener.obj
+         d:\Program Files\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:".\Release\Lesson31.exe" /INCREMENTAL:NO /NOLOGO opengl32.lib glu32.lib glaux.lib odbc32.lib odbccp32.lib opencv_calib3d231d.lib opencv_contrib231d.lib opencv_core231d.lib opencv_features2d231d.lib opencv_flann231d.lib opencv_gpu231d.lib opencv_highgui231d.lib opencv_imgproc231d.lib opencv_legacy231d.lib opencv_ml231d.lib opencv_objdetect231d.lib opencv_ts231d.lib opencv_video231d.lib Kinect10.lib FaceTrackLib.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:".\Release\Lesson31.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /PDB:"E:\VivianJia\备份0527-Leap\ShowMeYourHand\Release\Lesson31.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:".\Release\Lesson31.lib" /MACHINE:X86 .\Release\glListener.obj
          .\Release\Lesson31.obj
          .\Release\mathlib.obj
          .\Release\MilkshapeModel.obj
          .\Release\Model.obj
-     1>glListener.obj : error LNK2019: 无法解析的外部符号 "__declspec(dllimport) protected: virtual __thiscall Leap::Interface::~Interface(void)" (__imp_??1Interface@Leap@@MAE@XZ)，该符号在函数 "public: virtual __thiscall Leap::Frame::~Frame(void)" (??1Frame@Leap@@UAE@XZ) 中被引用
-     1>glListener.obj : error LNK2019: 无法解析的外部符号 "__declspec(dllimport) public: struct Leap::Vector __thiscall Leap::Pointable::tipVelocity(void)const " (__imp_?tipVelocity@Pointable@Leap@@QBE?AUVector@2@XZ)，该符号在函数 "public: virtual void __thiscall glListener::onFrame(class Leap::Controller const &)" (?onFrame@glListener@@UAEXABVController@Leap@@@Z) 中被引用
-     1>glListener.obj : error LNK2019: 无法解析的外部符号 "__declspec(dllimport) public: struct Leap::Vector __thiscall Leap::Pointable::tipPosition(void)const " (__imp_?tipPosition@Pointable@Leap@@QBE?AUVector@2@XZ)，该符号在函数 "public: virtual void __thiscall glListener::onFrame(class Leap::Controller const &)" (?onFrame@glListener@@UAEXABVController@Leap@@@Z) 中被引用
-     1>glListener.obj : error LNK2019: 无法解析的外部符号 "__declspec(dllimport) public: class Leap::Finger __thiscall Leap::FingerList::operator[](int)const " (__imp_??AFingerList@Leap@@QBE?AVFinger@1@H@Z)，该符号在函数 "public: virtual void __thiscall glListener::onFrame(class Leap::Controller const &)" (?onFrame@glListener@@UAEXABVController@Leap@@@Z) 中被引用
-     1>glListener.obj : error LNK2019: 无法解析的外部符号 "__declspec(dllimport) public: int __thiscall Leap::FingerList::count(void)const " (__imp_?count@FingerList@Leap@@QBEHXZ)，该符号在函数 "public: virtual void __thiscall glListener::onFrame(class Leap::Controller const &)" (?onFrame@glListener@@UAEXABVController@Leap@@@Z) 中被引用
-     1>glListener.obj : error LNK2019: 无法解析的外部符号 "__declspec(dllimport) public: bool __thiscall Leap::FingerList::empty(void)const " (__imp_?empty@FingerList@Leap@@QBE_NXZ)，该符号在函数 "public: virtual void __thiscall glListener::onFrame(class Leap::Controller const &)" (?onFrame@glListener@@UAEXABVController@Leap@@@Z) 中被引用
-     1>glListener.obj : error LNK2019: 无法解析的外部符号 "__declspec(dllimport) public: class Leap::FingerList __thiscall Leap::Hand::fingers(void)const " (__imp_?fingers@Hand@Leap@@QBE?AVFingerList@2@XZ)，该符号在函数 "public: virtual void __thiscall glListener::onFrame(class Leap::Controller const &)" (?onFrame@glListener@@UAEXABVController@Leap@@@Z) 中被引用
-     1>glListener.obj : error LNK2019: 无法解析的外部符号 "__declspec(dllimport) public: class Leap::Hand __thiscall Leap::HandList::operator[](int)const " (__imp_??AHandList@Leap@@QBE?AVHand@1@H@Z)，该符号在函数 "public: virtual void __thiscall glListener::onFrame(class Leap::Controller const &)" (?onFrame@glListener@@UAEXABVController@Leap@@@Z) 中被引用
-     1>glListener.obj : error LNK2019: 无法解析的外部符号 "__declspec(dllimport) public: bool __thiscall Leap::HandList::empty(void)const " (__imp_?empty@HandList@Leap@@QBE_NXZ)，该符号在函数 "public: virtual void __thiscall glListener::onFrame(class Leap::Controller const &)" (?onFrame@glListener@@UAEXABVController@Leap@@@Z) 中被引用
-     1>glListener.obj : error LNK2019: 无法解析的外部符号 "__declspec(dllimport) public: class Leap::HandList __thiscall Leap::Frame::hands(void)const " (__imp_?hands@Frame@Leap@@QBE?AVHandList@2@XZ)，该符号在函数 "public: virtual void __thiscall glListener::onFrame(class Leap::Controller const &)" (?onFrame@glListener@@UAEXABVController@Leap@@@Z) 中被引用
-     1>glListener.obj : error LNK2019: 无法解析的外部符号 "__declspec(dllimport) public: class Leap::Frame __thiscall Leap::Controller::frame(int)const " (__imp_?frame@Controller@Leap@@QBE?AVFrame@2@H@Z)，该符号在函数 "public: virtual void __thiscall glListener::onFrame(class Leap::Controller const &)" (?onFrame@glListener@@UAEXABVController@Leap@@@Z) 中被引用
-     1>glListener.obj : error LNK2019: 无法解析的外部符号 "__declspec(dllimport) public: void __thiscall Leap::Controller::enableGesture(enum Leap::Gesture::Type,bool)const " (__imp_?enableGesture@Controller@Leap@@QBEXW4Type@Gesture@2@_N@Z)，该符号在函数 "public: virtual void __thiscall glListener::onConnect(class Leap::Controller const &)" (?onConnect@glListener@@UAEXABVController@Leap@@@Z) 中被引用
-     1>Lesson31.obj : error LNK2019: 无法解析的外部符号 "__declspec(dllimport) public: __thiscall Leap::Listener::Listener(void)" (__imp_??0Listener@Leap@@QAE@XZ)，该符号在函数 "public: __thiscall glListener::glListener(void)" (??0glListener@@QAE@XZ) 中被引用
-     1>Lesson31.obj : error LNK2019: 无法解析的外部符号 "__declspec(dllimport) public: virtual __thiscall Leap::Listener::~Listener(void)" (__imp_??1Listener@Leap@@UAE@XZ)，该符号在函数 "public: virtual __thiscall glListener::~glListener(void)" (??1glListener@@UAE@XZ) 中被引用
-     1>Lesson31.obj : error LNK2019: 无法解析的外部符号 "__declspec(dllimport) public: virtual __thiscall Leap::Controller::~Controller(void)" (__imp_??1Controller@Leap@@UAE@XZ)，该符号在函数 _WinMain@16 中被引用
-     1>Lesson31.obj : error LNK2019: 无法解析的外部符号 "__declspec(dllimport) public: __thiscall Leap::Controller::Controller(void)" (__imp_??0Controller@Leap@@QAE@XZ)，该符号在函数 _WinMain@16 中被引用
-     1>.\Release\Lesson31.exe : fatal error LNK1120: 16 个无法解析的外部命令
-     1>已完成生成项目“D:\VivianJia\备份0513\ShowMeYourHand\Lesson31.vcxproj”(build 个目标)的操作 - 失败。
+     1>LINK : fatal error LNK1181: 无法打开输入文件“Kinect10.lib”
+     1>已完成生成项目“E:\VivianJia\备份0527-Leap\ShowMeYourHand\Lesson31.vcxproj”(build 个目标)的操作 - 失败。
 
 生成失败。
 
-已用时间 00:00:03.87
+已用时间 00:00:04.59

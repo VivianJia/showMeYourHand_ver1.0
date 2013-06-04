@@ -41,8 +41,8 @@
     <OutDir>.\Debug\</OutDir>
     <IntDir>.\Debug\</IntDir>
     <LinkIncremental>true</LinkIncremental>
-    <LibraryPath>D:\VivianJia\LeapSDK%28Important%29\lib\x86;D:\VivianJia\OpenCV2.3\build\x86\vc10\lib;D:\VivianJia\OpenCV2.3\build\x64\vc10\lib;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSdkDir)lib;$(FrameworkSDKDir)\lib</LibraryPath>
-    <IncludePath>D:\VivianJia\OpenCV2.3\build\include\opencv2;D:\VivianJia\OpenCV2.3\build\include\opencv;D:\VivianJia\OpenCV2.3\build\include;$(IncludePath)</IncludePath>
+    <LibraryPath>E:\VivianJia\LeapSDK%28Important%29\lib\x86;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSdkDir)lib;$(FrameworkSDKDir)\lib</LibraryPath>
+    <IncludePath>$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>.\Release\</OutDir>
@@ -65,7 +65,8 @@
       <ObjectFileName>.\Debug\</ObjectFileName>
       <ProgramDataBaseFileName>.\Debug\</ProgramDataBaseFileName>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-      <AdditionalIncludeDirectories>C:\Program Files %28x86%29\Microsoft Visual Studio 11.0\VC\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
     </ClCompile>
     <Midl>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -87,7 +88,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <OutputFile>.\Debug\Lesson31.exe</OutputFile>
-      <AdditionalDependencies>opengl32.lib;glu32.lib;glaux.lib;Leapd.lib;odbc32.lib;odbccp32.lib;opencv_core230d.lib;opencv_highgui230d.lib;opencv_video230d.lib;opencv_ml230d.lib;opencv_legacy230d.lib;opencv_imgproc230d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glu32.lib;glaux.lib;Leapd.lib;odbc32.lib;odbccp32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>
@@ -132,7 +133,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="cvSlidebar.cpp" />
     <ClCompile Include="glListener.cpp" />
     <ClCompile Include="Lesson31.cpp" />
     <ClCompile Include="mathlib.cpp" />
@@ -140,12 +140,14 @@
     <ClCompile Include="Model.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="cvSlidebar.h" />
     <ClInclude Include="glListener.h" />
     <ClInclude Include="Lesson31.h" />
     <ClInclude Include="mathlib.h" />
     <ClInclude Include="MilkshapeModel.h" />
     <ClInclude Include="Model.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

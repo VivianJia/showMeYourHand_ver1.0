@@ -12,6 +12,7 @@ void glListener::onConnect(const Controller& controller) {
 	controller.enableGesture(Gesture::TYPE_KEY_TAP);
 	controller.enableGesture(Gesture::TYPE_SCREEN_TAP);
 	controller.enableGesture(Gesture::TYPE_SWIPE);
+	Listener::onConnect(controller);
 }
 
 void glListener::onDisconnect(const Controller& controller) {
